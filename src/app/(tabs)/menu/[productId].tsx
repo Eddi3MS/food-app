@@ -1,14 +1,24 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
-import React, { useEffect } from 'react'
+import Button from '@/components/Button'
+import SizeSelect from '@/components/SizeSelect'
+import Colors from '@/constants/Colors'
 import products from '@assets/data/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
-import Colors from '@/constants/Colors'
+import React, { useState } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
-const product = (props: any) => {
+const sizes = ['P', 'M', 'G', 'GG']
+
+const ProductDetails = () => {
+  const [selectedSize, setSelectedSize] = useState(sizes[0])
+
   const { productId } = useLocalSearchParams<{ productId: string }>()
   const product = products.find((product) => {
     return product.id === +productId
   })
+
+  const handleAddItemToCart = () => {
+    console.warn(selectedSize)
+  }
 
   if (!product) {
     return <Text>Produto não encontrado.</Text>
@@ -22,15 +32,20 @@ const product = (props: any) => {
         style={styles.image}
         resizeMode="contain"
       />
-      <Text style={styles.title} numberOfLines={1}>
-        {product.name}
-      </Text>
+
+      <SizeSelect
+        selectedSize={selectedSize}
+        setSelectedSize={setSelectedSize}
+        sizes={sizes}
+      />
+
       <Text style={styles.price}>${product.price}</Text>
+      <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
     </View>
   )
 }
 
-export default product
+export default ProductDetails
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +64,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   price: {
-    color: Colors.light.tint,
+    color: Colors.light.text,
+    fontSize: 24,
     fontWeight: 'bold',
+    marginTop: 'auto',
+    textAlign: 'center',
   },
 })

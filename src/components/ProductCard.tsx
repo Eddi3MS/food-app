@@ -1,14 +1,14 @@
+import { Link } from 'expo-router'
 import {
+  Dimensions,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  Pressable,
 } from 'react-native'
 import Colors from '../constants/Colors'
 import { Product } from '../types'
-import { Link } from 'expo-router'
 
 type ProductCardPros = { product: Product }
 
@@ -23,7 +23,7 @@ const ProductCard = ({ product }: ProductCardPros) => {
         { maxWidth: Dimensions.get('window').width / 2 - 15 },
       ]}
     >
-      <Link href={`/${product.id}`} asChild>
+      <Link href={`/menu/${product.id}`} asChild>
         <Pressable style={styles.Pressable}>
           <Image
             source={{ uri: productImage }}

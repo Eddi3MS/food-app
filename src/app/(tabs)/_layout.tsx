@@ -1,10 +1,9 @@
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
+import Colors from '@/constants/Colors'
 import { useClientOnlyValue } from '@hooks/useClientOnlyValue'
 import { useColorScheme } from '@hooks/useColorScheme'
-import Colors from '@/constants/Colors'
-import { Link, Tabs } from 'expo-router'
+import { Tabs } from 'expo-router'
 import React from 'react'
-import { Pressable } from 'react-native'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 
 export default function TabLayout() {
   const colorScheme = useColorScheme()
@@ -18,35 +17,23 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true),
       }}
     >
+      <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen
-        name="index"
+        name="menu"
         options={{
-          title: 'Pizzas',
+          title: 'Menu',
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon name="code" color={color} />
+            <FontAwesomeIcon name="cutlery" color={color} size={20} />
           ),
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesomeIcon
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          title: 'Pedidos',
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon name="shopping-cart" color={color} />
+            <FontAwesomeIcon name="list" color={color} size={20} />
           ),
         }}
       />
