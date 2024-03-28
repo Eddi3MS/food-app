@@ -1,4 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { useColorScheme } from '@hooks/useColorScheme'
 import {
   DarkTheme,
   DefaultTheme,
@@ -8,8 +9,6 @@ import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
-
-import { useColorScheme } from '@/components/useColorScheme'
 
 export {
   // Catch any errors thrown by the Layout component.
