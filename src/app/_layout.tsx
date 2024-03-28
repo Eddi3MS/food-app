@@ -1,3 +1,4 @@
+import CartProvider from '@/providers/CartProvider'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useColorScheme } from '@hooks/useColorScheme'
 import {
@@ -16,7 +17,7 @@ export {
 } from 'expo-router'
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
+  // Ensure that reloading on `/cart` keeps a back button present.
   initialRouteName: '(tabs)',
 }
 
@@ -52,9 +53,19 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <CartProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="cart"
+            options={{
+              title: 'Carrinho',
+              presentation: 'modal',
+              animation: 'slide_from_bottom',
+            }}
+          />
+        </Stack>
+      </CartProvider>
     </ThemeProvider>
   )
 }

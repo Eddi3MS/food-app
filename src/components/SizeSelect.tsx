@@ -1,11 +1,12 @@
 import Colors from '@/constants/Colors'
+import { PizzaSize } from '@/types'
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 
 type SizeSelectProps = {
-  selectedSize: string
-  setSelectedSize: React.Dispatch<React.SetStateAction<string>>
-  sizes: string[]
+  selectedSize: PizzaSize
+  setSelectedSize: React.Dispatch<React.SetStateAction<PizzaSize>>
+  sizes: PizzaSize[]
 }
 
 const SizeSelect = ({
