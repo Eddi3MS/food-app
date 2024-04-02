@@ -10,18 +10,19 @@ export type PizzaSize = 'P' | 'M' | 'G' | 'GG'
 export type CartItem = {
   id: string
   product: Product
+  product_id: number
   size: PizzaSize
   quantity: number
 }
 
 export const OrderStatusList: OrderStatus[] = [
-  'New',
-  'Cooking',
-  'Delivering',
-  'Delivered',
+  'Novo',
+  'Preparando',
+  'Saiu p/ Entrega',
+  'Entregue',
 ]
 
-export type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'Delivered'
+export type OrderStatus = 'Novo' | 'Preparando' | 'Saiu p/ Entrega' | 'Entregue'
 
 export type Order = {
   id: number

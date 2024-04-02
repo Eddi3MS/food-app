@@ -1,20 +1,20 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
-import { useClientOnlyValue } from '@hooks/useClientOnlyValue'
-import { useColorScheme } from '@hooks/useColorScheme'
 import { Tabs } from 'expo-router'
 import React from 'react'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors.light.text,
+        tabBarInactiveTintColor: 'gainsboro',
+        tabBarStyle: {
+          backgroundColor: Colors.light.tint,
+        },
       }}
     >
-      <Tabs.Screen name="index" options={{ href: null }} />
+      <Tabs.Screen name="index" options={{ href: null, title: 'Menu' }} />
       <Tabs.Screen
         name="menu"
         options={{
@@ -26,11 +26,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="orders"
         options={{
-          title: 'Pedidos',
+          title: 'Orders',
+          headerShown: false,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon name="list" color={color} size={20} />
+            <FontAwesomeIcon name="list" color={color} />
           ),
         }}
       />

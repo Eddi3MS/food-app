@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { useCart } from '../providers/CartProvider'
 import { CartItem } from '../types'
+import FontAwesomeIcon from './FontAwesomeIcon'
 
 type CartCardProps = {
   cartItem: CartItem
@@ -30,19 +31,21 @@ const CartCard = ({ cartItem }: CartCardProps) => {
         </View>
       </View>
       <View style={styles.quantitySelector}>
-        <FontAwesome
+        <FontAwesomeIcon
           onPress={() => updateQuantity(cartItem.id, -1)}
           name="minus"
           color="gray"
-          style={{ padding: 5 }}
+          style={styles.quantityIcon}
+          size={14}
         />
 
         <Text style={styles.quantity}>{cartItem.quantity}</Text>
-        <FontAwesome
+        <FontAwesomeIcon
           onPress={() => updateQuantity(cartItem.id, 1)}
           name="plus"
           color="gray"
-          style={{ padding: 5 }}
+          style={styles.quantityIcon}
+          size={14}
         />
       </View>
     </View>
@@ -82,6 +85,12 @@ const styles = StyleSheet.create({
   quantity: {
     fontWeight: '500',
     fontSize: 18,
+  },
+  quantityIcon: {
+    padding: 5,
+    aspectRatio: 1,
+    verticalAlign: 'middle',
+    textAlign: 'center',
   },
   price: {
     color: Colors.light.tint,

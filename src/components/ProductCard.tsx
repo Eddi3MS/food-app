@@ -1,4 +1,4 @@
-import { Link } from 'expo-router'
+import { Link, useSegments, AllRoutes, usePathname } from 'expo-router'
 import {
   Dimensions,
   Image,
@@ -13,6 +13,8 @@ import { Product } from '../types'
 type ProductCardPros = { product: Product }
 
 const ProductCard = ({ product }: ProductCardPros) => {
+  const segments = useSegments<['(admin)', 'menu'] | ['(user)', 'menu']>()
+
   const productImage = product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE
 
   return (
@@ -23,7 +25,7 @@ const ProductCard = ({ product }: ProductCardPros) => {
         { maxWidth: Dimensions.get('window').width / 2 - 15 },
       ]}
     >
-      <Link href={`/menu/${product.id}`} asChild>
+      <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
         <Pressable style={styles.Pressable}>
           <Image
             source={{ uri: productImage }}

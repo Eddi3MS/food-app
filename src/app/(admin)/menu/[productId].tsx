@@ -1,18 +1,22 @@
-import Button from '@/components/Button'
 import SizeSelect from '@/components/SizeSelect'
 import Colors from '@/constants/Colors'
-import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
 import products from '@assets/data/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text } from 'react-native'
 
 const sizes: PizzaSize[] = ['P', 'M', 'G', 'GG']
 
+const valueMultiplier = {
+  P: 1,
+  M: 1.5,
+  G: 2,
+  GG: 2.5,
+}
+
 const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState<PizzaSize>(sizes[0])
-  const { addItem } = useCart()
 
   const { productId } = useLocalSearchParams<{ productId: string }>()
   const product = products.find((product) => {
@@ -23,28 +27,22 @@ const ProductDetails = () => {
     return <Text>Produto não encontrado.</Text>
   }
 
-  const handleAddItemToCart = () => {
-    addItem(product, selectedSize)
-  }
-
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
       <Image
-        source={{ uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE }}
+        source={{
+          uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE,
+        }}
         style={styles.image}
         resizeMode="contain"
       />
 
-      <SizeSelect
-        selectedSize={selectedSize}
-        setSelectedSize={setSelectedSize}
-        sizes={sizes}
-      />
-
-      <Text style={styles.price}>${product.price}</Text>
-      <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
-    </View>
+      <Text style={styles.title}>{product.name}</Text>
+      <Text style={styles.price}>
+        ${(product.price * valueMultiplier[selectedSize]).toFixed(2)}
+      </Text>
+    </ScrollView>
   )
 }
 
@@ -53,24 +51,25 @@ export default ProductDetails
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    height: '100%',
     flex: 1,
-    borderRadius: 20,
-    padding: 10,
+    padding: 20,
   },
   image: {
     width: '100%',
     aspectRatio: 1,
+    alignSelf: 'center',
   },
   title: {
-    fontSize: 18,
+    fontSize: 30,
     fontWeight: '600',
     marginVertical: 10,
+    textAlign: 'center',
   },
   price: {
     color: Colors.light.text,
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 'auto',
     textAlign: 'center',
   },
 })

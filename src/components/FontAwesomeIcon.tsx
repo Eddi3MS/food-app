@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 
 function FontAwesomeIcon({
-  size = 28,
+  size = 20,
   style = { marginBottom: -3 },
   ...props
 }: React.ComponentProps<typeof FontAwesome>) {

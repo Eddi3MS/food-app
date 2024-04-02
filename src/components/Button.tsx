@@ -12,11 +12,11 @@ const Button = forwardRef<View | null, ButtonProps>(
       <View style={styles.container}>
         <Pressable
           ref={ref}
-          {...pressableProps}
           style={({ pressed }) =>
             pressed ? [styles.pressable, styles.pressed] : styles.pressable
           }
           android_ripple={{ color: '#1983cf' }}
+          {...pressableProps}
         >
           <Text style={styles.text}>{text}</Text>
         </Pressable>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   pressable: {
     alignItems: 'center',
-    padding: 15,
+    padding: 10,
   },
   pressed: {
     opacity: 0.75,
