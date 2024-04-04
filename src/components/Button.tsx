@@ -15,7 +15,7 @@ const Button = forwardRef<View | null, ButtonProps>(
           style={({ pressed }) =>
             pressed ? [styles.pressable, styles.pressed] : styles.pressable
           }
-          android_ripple={{ color: '#1983cf' }}
+          android_ripple={{ color: Colors.primaryDark }}
           {...pressableProps}
         >
           <Text style={styles.text}>{text}</Text>
@@ -27,7 +27,7 @@ const Button = forwardRef<View | null, ButtonProps>(
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.light.tint,
+    backgroundColor: Colors.primary,
     marginVertical: 10,
     overflow: 'hidden',
     borderRadius: 100,

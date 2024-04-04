@@ -18,7 +18,7 @@ export default function MenuLayout() {
                   <FontAwesomeIcon
                     name="plus-square-o"
                     size={20}
-                    color={Colors.light.tint}
+                    color={Colors.primary}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}

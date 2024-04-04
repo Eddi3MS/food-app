@@ -110,6 +110,7 @@ const CreateScreen = () => {
         onChangeText={setName}
         placeholder="Margarita..."
         style={styles.input}
+        placeholderTextColor={Colors.gray}
       />
 
       <Text style={styles.label}>Price ($)</Text>
@@ -119,6 +120,7 @@ const CreateScreen = () => {
         placeholder="9.99"
         style={styles.input}
         keyboardType="numeric"
+        placeholderTextColor={Colors.gray}
       />
       <Text style={styles.error}>{errors}</Text>
       <Button
@@ -145,19 +147,20 @@ const styles = StyleSheet.create({
   textButton: {
     alignSelf: 'center',
     fontWeight: 'bold',
-    color: Colors.light.tint,
+    color: Colors.primary,
     marginVertical: 10,
   },
   label: {
-    color: 'gray',
+    color: Colors.black,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: Colors.gray,
+    color: Colors.black,
     padding: 10,
     marginTop: 5,
     marginBottom: 20,
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     borderRadius: 5,
   },
   error: {

@@ -10,9 +10,18 @@ const ListLayout = () => {
   return (
     <SafeAreaView
       edges={['top']}
-      style={{ flex: 1, backgroundColor: Colors.dark.text }}
+      style={{ flex: 1, backgroundColor: Colors.white }}
     >
-      <Tab />
+      <Tab
+        screenOptions={{
+          tabBarActiveTintColor: Colors.primary,
+          tabBarInactiveTintColor: Colors.gray,
+
+          tabBarIndicatorStyle: {
+            backgroundColor: Colors.primary,
+          },
+        }}
+      />
     </SafeAreaView>
   )
 }

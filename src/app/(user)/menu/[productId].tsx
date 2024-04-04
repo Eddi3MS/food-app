@@ -64,7 +64,7 @@ const ProductDetails = () => {
               styles.size,
               {
                 backgroundColor:
-                  selectedSize === size ? 'gainsboro' : '#00000005',
+                  selectedSize === size ? Colors.gray : '#00000005',
               },
             ]}
             key={size}
@@ -73,7 +73,7 @@ const ProductDetails = () => {
               style={[
                 styles.sizeText,
                 {
-                  color: selectedSize === size ? Colors.light.text : 'gray',
+                  color: selectedSize === size ? Colors.black : Colors.gray,
                 },
               ]}
             >
@@ -95,7 +95,7 @@ export default ProductDetails
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     height: '100%',
     flex: 1,
     padding: 20,
@@ -109,9 +109,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginTop: 10,
+    color: Colors.black,
   },
   price: {
-    color: Colors.light.text,
+    color: Colors.black,
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 'auto',

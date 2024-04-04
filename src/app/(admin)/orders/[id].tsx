@@ -37,19 +37,19 @@ export default function OrderDetailsScreen() {
                 key={status}
                 onPress={() => console.warn('Update status')}
                 style={{
-                  borderColor: Colors.light.tint,
+                  borderColor: Colors.primary,
                   borderWidth: 1,
                   padding: 10,
                   borderRadius: 5,
                   marginVertical: 10,
                   backgroundColor:
-                    order.status === status ? Colors.light.tint : 'transparent',
+                    order.status === status ? Colors.primary : 'transparent',
                 }}
               >
                 <Text
                   style={{
                     color:
-                      order.status === status ? 'white' : Colors.light.tint,
+                      order.status === status ? Colors.white : Colors.primary,
                   }}
                 >
                   {status}

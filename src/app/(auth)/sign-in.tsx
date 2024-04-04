@@ -16,6 +16,7 @@ const SignInScreen = () => {
         onChangeText={setEmail}
         placeholder="jon@gmail.com"
         style={styles.input}
+        placeholderTextColor={Colors.gray}
       />
 
       <Text style={styles.label}>Senha</Text>
@@ -24,6 +25,7 @@ const SignInScreen = () => {
         onChangeText={setPassword}
         placeholder=""
         style={styles.input}
+        placeholderTextColor={Colors.gray}
         secureTextEntry
       />
 
@@ -42,21 +44,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    color: 'gray',
+    color: Colors.black,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: Colors.gray,
+    color: Colors.black,
     padding: 10,
     marginTop: 5,
     marginBottom: 20,
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     borderRadius: 5,
   },
   textButton: {
     alignSelf: 'center',
     fontWeight: 'bold',
-    color: Colors.light.tint,
+    color: Colors.primary,
     marginVertical: 10,
   },
 })

@@ -28,7 +28,7 @@ const ProductDetails = () => {
                   <FontAwesomeIcon
                     name="pencil"
                     size={20}
-                    color={Colors.light.tint}
+                    color={Colors.primary}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -56,7 +56,7 @@ export default ProductDetails
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     height: '100%',
     flex: 1,
     padding: 20,
@@ -70,10 +70,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '600',
     marginVertical: 10,
+    color: Colors.black,
     textAlign: 'center',
   },
   price: {
-    color: Colors.light.text,
+    color: Colors.black,
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',

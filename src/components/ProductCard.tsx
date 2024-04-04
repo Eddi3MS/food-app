@@ -1,4 +1,4 @@
-import { Link, useSegments, AllRoutes, usePathname } from 'expo-router'
+import { Link, useSegments } from 'expo-router'
 import {
   Dimensions,
   Image,
@@ -46,7 +46,7 @@ export default ProductCard
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     flex: 1,
     borderRadius: 20,
   },
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   price: {
-    color: Colors.light.tint,
+    color: Colors.primary,
     fontWeight: 'bold',
   },
 })

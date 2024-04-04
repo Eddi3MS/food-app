@@ -1,11 +1,10 @@
-import { FontAwesome } from '@expo/vector-icons'
+import { defaultImage } from '@/utils/defaultImage'
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { useCart } from '../providers/CartProvider'
 import { CartItem } from '../types'
 import FontAwesomeIcon from './FontAwesomeIcon'
-import { defaultImage } from '@/utils/defaultImage'
 
 type CartCardProps = {
   cartItem: CartItem
@@ -55,7 +54,7 @@ const CartCard = ({ cartItem }: CartCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     borderRadius: 10,
     padding: 5,
     flex: 1,
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   price: {
-    color: Colors.light.tint,
+    color: Colors.primary,
     fontWeight: 'bold',
   },
 })

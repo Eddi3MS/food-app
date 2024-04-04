@@ -1,16 +1,13 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
-import { useColorScheme } from '@hooks/useColorScheme'
 import { Tabs } from 'expo-router'
 import React from 'react'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors.primary,
       }}
     >
       <Tabs.Screen name="index" options={{ href: null, headerShown: false }} />

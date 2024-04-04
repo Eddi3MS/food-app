@@ -56,7 +56,7 @@ const OrderProductCard = ({ item }: OrderProductCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     borderRadius: 10,
     padding: 5,
     flex: 1,
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 16,
     marginBottom: 5,
+    color: Colors.black,
   },
   subtitleContainer: {
     gap: 5,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 10,
-    backgroundColor: Colors.light.tint,
+    backgroundColor: Colors.primary,
     aspectRatio: 1,
     width: 40,
     borderRadius: 5,
@@ -91,10 +92,10 @@ const styles = StyleSheet.create({
   quantity: {
     fontWeight: '500',
     fontSize: 16,
-    color: Colors.dark.text,
+    color: Colors.black,
   },
   price: {
-    color: Colors.light.tint,
+    color: Colors.black,
     fontWeight: 'bold',
   },
 })
