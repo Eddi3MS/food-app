@@ -47,6 +47,7 @@ const ProductDetails = () => {
       />
       <ButtonSelection
         options={sizes}
+        keyExtractor={(size) => size}
         title={<Text style={styles.title}>Escolha o tamanho:</Text>}
         optionsContainerClasses={{
           flexDirection: 'row',

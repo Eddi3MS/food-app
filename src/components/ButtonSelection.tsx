@@ -5,12 +5,14 @@ const ButtonSelection = <T,>({
   options,
   title,
   children,
+  keyExtractor,
   containerClasses,
   optionsContainerClasses,
 }: {
   options: T[]
   title: ReactNode
   children: (option: T) => ReactNode
+  keyExtractor: (option: T) => string
   containerClasses?: StyleProp<ViewStyle>
   optionsContainerClasses?: StyleProp<ViewStyle>
 }) => {
@@ -23,7 +25,9 @@ const ButtonSelection = <T,>({
           optionsContainerClasses && optionsContainerClasses,
         ]}
       >
-        {options.map((option) => children(option))}
+        {options.map((option) => (
+          <View key={keyExtractor(option)}>{children(option)}</View>
+        ))}
       </View>
     </View>
   )

@@ -30,6 +30,7 @@ export default function OrderDetailsScreen() {
             title={<Text style={{ fontWeight: 'bold' }}>Status</Text>}
             options={OrderStatusList}
             optionsContainerClasses={{ flexDirection: 'row', gap: 5 }}
+            keyExtractor={(option) => option}
           >
             {(status) => (
               <Pressable
