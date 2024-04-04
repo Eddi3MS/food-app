@@ -1,5 +1,5 @@
 import Button from '@/components/Button'
-import SizeSelect from '@/components/SizeSelect'
+import ButtonSelection from '@/components/ButtonSelection'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
@@ -7,7 +7,7 @@ import { defaultImage } from '@/utils/defaultImage'
 import products from '@assets/data/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text } from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 
 const sizes: PizzaSize[] = ['P', 'M', 'G', 'GG']
 
@@ -45,11 +45,43 @@ const ProductDetails = () => {
         style={styles.image}
         resizeMode="contain"
       />
-      <SizeSelect
-        selectedSize={selectedSize}
-        setSelectedSize={setSelectedSize}
-        sizes={sizes}
-      />
+      <ButtonSelection
+        options={sizes}
+        title={<Text style={styles.title}>Escolha o tamanho:</Text>}
+        optionsContainerClasses={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          marginVertical: 10,
+        }}
+      >
+        {(size) => (
+          <Pressable
+            onPress={() => {
+              setSelectedSize(size)
+            }}
+            style={[
+              styles.size,
+              {
+                backgroundColor:
+                  selectedSize === size ? 'gainsboro' : '#00000005',
+              },
+            ]}
+            key={size}
+          >
+            <Text
+              style={[
+                styles.sizeText,
+                {
+                  color: selectedSize === size ? Colors.light.text : 'gray',
+                },
+              ]}
+            >
+              {size}
+            </Text>
+          </Pressable>
+        )}
+      </ButtonSelection>
+
       <Text style={styles.price}>
         ${(product.price * valueMultiplier[selectedSize]).toFixed(2)}
       </Text>
@@ -73,9 +105,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginVertical: 10,
+    fontSize: 16,
+    fontWeight: '500',
+    marginTop: 10,
   },
   price: {
     color: Colors.light.text,
@@ -83,5 +115,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 'auto',
     textAlign: 'center',
+  },
+  size: {
+    width: 50,
+    aspectRatio: 1,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sizeText: {
+    fontSize: 20,
+    fontWeight: '500',
   },
 })
