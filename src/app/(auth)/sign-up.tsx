@@ -10,7 +10,7 @@ const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Email</Text>
+      <Text style={styles.label}>E-mail</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
@@ -18,7 +18,7 @@ const SignUpScreen = () => {
         style={styles.input}
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={styles.label}>Senha</Text>
       <TextInput
         value={password}
         onChangeText={setPassword}
@@ -27,9 +27,9 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <Button text="Create account" />
+      <Button text="Criar Conta" />
       <Link href="/sign-in" style={styles.textButton}>
-        Sign in
+        Entrar
       </Link>
     </View>
   )

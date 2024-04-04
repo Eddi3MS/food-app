@@ -1,5 +1,5 @@
-import OrderItemListItem from '@/components/OrderItemListItem'
-import OrderListItem from '@/components/OrderListItem'
+import OrderListCard from '@/components/OrderListCard'
+import OrderProductCard from '@/components/OrderProductCard'
 import orders from '@assets/data/orders'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { FlatList, Text, View } from 'react-native'
@@ -19,9 +19,9 @@ export default function OrderDetailsScreen() {
 
       <FlatList
         data={order.order_items}
-        renderItem={({ item }) => <OrderItemListItem item={item} />}
+        renderItem={({ item }) => <OrderProductCard item={item} />}
         contentContainerStyle={{ gap: 10 }}
-        ListHeaderComponent={() => <OrderListItem order={order} />}
+        ListHeaderComponent={() => <OrderListCard order={order} />}
       />
     </View>
   )

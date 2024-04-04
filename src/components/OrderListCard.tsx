@@ -4,11 +4,11 @@ import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Order } from '../types'
 
-type OrderListItemProps = {
+type OrderListCardProps = {
   order: Order
 }
 
-const OrderListItem = ({ order }: OrderListItemProps) => {
+const OrderListCard = ({ order }: OrderListCardProps) => {
   const segments = useSegments<
     ['(user)', 'orders'] | ['(admin)', 'orders', '[id]']
   >()
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default OrderListItem
+export default OrderListCard
