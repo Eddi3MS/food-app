@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { defaultImage } from '@/utils/defaultImage'
 import React from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { OrderItem } from '../types'
 
@@ -12,7 +13,7 @@ const OrderItemListItem = ({ item }: OrderItemListItemProps) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: item.products.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE,
+          uri: defaultImage(item.products.image),
         }}
         style={styles.image}
         resizeMode="contain"

@@ -28,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="orders"
         options={{
-          title: 'Orders',
+          title: 'Pedidos',
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon name="list" color={color} />

@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router'
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Button from './Button'
+import { defaultImage } from '@/utils/defaultImage'
 
 const EmptyCartCard = () => {
   const router = useRouter()
@@ -13,10 +14,7 @@ const EmptyCartCard = () => {
   return (
     <View style={{ padding: 10 }}>
       <View style={styles.emptyCartContainer}>
-        <Image
-          source={{ uri: process.env.EXPO_PUBLIC_DEFAULT_IMAGE }}
-          style={styles.image}
-        />
+        <Image source={{ uri: defaultImage() }} style={styles.image} />
         <Text style={styles.text}>Seu carrinho está vazio..</Text>
         <View style={styles.buttonContainer}>
           <Button onPress={handleBack} text="Voltar" />

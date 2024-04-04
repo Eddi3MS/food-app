@@ -5,6 +5,7 @@ import Colors from '../constants/Colors'
 import { useCart } from '../providers/CartProvider'
 import { CartItem } from '../types'
 import FontAwesomeIcon from './FontAwesomeIcon'
+import { defaultImage } from '@/utils/defaultImage'
 
 type CartCardProps = {
   cartItem: CartItem
@@ -17,7 +18,7 @@ const CartCard = ({ cartItem }: CartCardProps) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: cartItem.product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE,
+          uri: defaultImage(cartItem.product.image),
         }}
         style={styles.image}
         resizeMode="contain"

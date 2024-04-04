@@ -12,7 +12,7 @@ export default function MenuLayout() {
         options={{
           title: 'Menu',
           headerRight: () => (
-            <Link href="/cart" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesomeIcon
@@ -45,6 +45,13 @@ export default function MenuLayout() {
               </Pressable>
             </Link>
           ),
+        }}
+      />
+
+      <Stack.Screen
+        name="create"
+        options={{
+          title: 'Adicionar produto',
         }}
       />
     </Stack>

@@ -1,23 +1,11 @@
-import SizeSelect from '@/components/SizeSelect'
 import Colors from '@/constants/Colors'
-import { PizzaSize } from '@/types'
+import { defaultImage } from '@/utils/defaultImage'
 import products from '@assets/data/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
-import React, { useState } from 'react'
+import React from 'react'
 import { Image, ScrollView, StyleSheet, Text } from 'react-native'
 
-const sizes: PizzaSize[] = ['P', 'M', 'G', 'GG']
-
-const valueMultiplier = {
-  P: 1,
-  M: 1.5,
-  G: 2,
-  GG: 2.5,
-}
-
 const ProductDetails = () => {
-  const [selectedSize, setSelectedSize] = useState<PizzaSize>(sizes[0])
-
   const { productId } = useLocalSearchParams<{ productId: string }>()
   const product = products.find((product) => {
     return product.id === +productId
@@ -32,16 +20,14 @@ const ProductDetails = () => {
       <Stack.Screen options={{ title: product.name }} />
       <Image
         source={{
-          uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE,
+          uri: defaultImage(product.image),
         }}
         style={styles.image}
         resizeMode="contain"
       />
 
       <Text style={styles.title}>{product.name}</Text>
-      <Text style={styles.price}>
-        ${(product.price * valueMultiplier[selectedSize]).toFixed(2)}
-      </Text>
+      <Text style={styles.price}>${product.price.toFixed(2)}</Text>
     </ScrollView>
   )
 }

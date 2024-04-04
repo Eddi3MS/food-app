@@ -3,10 +3,11 @@ import SizeSelect from '@/components/SizeSelect'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { PizzaSize } from '@/types'
+import { defaultImage } from '@/utils/defaultImage'
 import products from '@assets/data/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text } from 'react-native'
 
 const sizes: PizzaSize[] = ['P', 'M', 'G', 'GG']
 
@@ -39,7 +40,7 @@ const ProductDetails = () => {
       <Stack.Screen options={{ title: product.name }} />
       <Image
         source={{
-          uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE,
+          uri: defaultImage(product.image),
         }}
         style={styles.image}
         resizeMode="contain"
