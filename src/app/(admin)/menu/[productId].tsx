@@ -1,9 +1,10 @@
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
 import { defaultImage } from '@/utils/defaultImage'
 import products from '@assets/data/products'
-import { Stack, useLocalSearchParams } from 'expo-router'
+import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { Image, ScrollView, StyleSheet, Text } from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 
 const ProductDetails = () => {
   const { productId } = useLocalSearchParams<{ productId: string }>()
@@ -17,7 +18,26 @@ const ProductDetails = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Stack.Screen options={{ title: product.name }} />
+      <Stack.Screen
+        options={{
+          title: product.name,
+          headerRight: () => (
+            <Link href={`/(admin)/menu/create?id=${productId}`} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesomeIcon
+                    name="pencil"
+                    size={20}
+                    color={Colors.light.tint}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
+
       <Image
         source={{
           uri: defaultImage(product.image),

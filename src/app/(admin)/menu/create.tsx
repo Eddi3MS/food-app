@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, Alert } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '../../../constants/Colors'
 import Button from '../../../components/Button'
 import * as ImagePicker from 'expo-image-picker'
-import { useRouter } from 'expo-router'
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { defaultImage } from '@/utils/defaultImage'
 
 const CreateScreen = () => {
@@ -11,6 +11,9 @@ const CreateScreen = () => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [errors, setErrors] = useState('')
+
+  const { id } = useLocalSearchParams()
+  const isUpdating = !!id
 
   const router = useRouter()
 
@@ -31,6 +34,22 @@ const CreateScreen = () => {
     return true
   }
 
+  const onSubmit = () => {
+    if (isUpdating) {
+      onUpdate()
+    } else {
+      onCreate()
+    }
+  }
+
+  const onUpdate = () => {
+    if (!validateInput()) {
+      return
+    }
+
+    console.warn('Updating dish')
+    router.back()
+  }
   const onCreate = () => {
     if (!validateInput()) {
       return
@@ -41,6 +60,17 @@ const CreateScreen = () => {
     setPrice('')
     setImage('')
     router.back()
+  }
+
+  const onDelete = () => {
+    console.warn('deletado')
+  }
+
+  const confirmDelete = () => {
+    Alert.alert('Confirme', 'Deletar produto do database?', [
+      { text: 'cancelar', style: 'cancel' },
+      { text: 'Deletar', style: 'destructive', onPress: onDelete },
+    ])
   }
 
   const pickImage = async () => {
@@ -60,6 +90,11 @@ const CreateScreen = () => {
   }
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: isUpdating ? 'Atualizar produto' : 'Adicionar produto',
+        }}
+      />
       <Image
         source={{ uri: defaultImage(image) }}
         style={styles.image}
@@ -86,7 +121,15 @@ const CreateScreen = () => {
         keyboardType="numeric"
       />
       <Text style={styles.error}>{errors}</Text>
-      <Button onPress={onCreate} text="Create" />
+      <Button
+        onPress={onCreate}
+        text={isUpdating ? 'Atualizar' : 'Adicionar'}
+      />
+      {isUpdating && (
+        <Text style={styles.textButton} onPress={confirmDelete}>
+          Deletar?
+        </Text>
+      )}
     </View>
   )
 }

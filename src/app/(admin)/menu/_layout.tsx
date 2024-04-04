@@ -27,33 +27,6 @@ export default function MenuLayout() {
           ),
         }}
       />
-      <Stack.Screen
-        name="[productId]"
-        options={{
-          title: 'Menu',
-          headerRight: () => (
-            <Link href="/cart" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesomeIcon
-                    name="pencil"
-                    size={20}
-                    color={Colors.light.tint}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-
-      <Stack.Screen
-        name="create"
-        options={{
-          title: 'Adicionar produto',
-        }}
-      />
     </Stack>
   )
 }
