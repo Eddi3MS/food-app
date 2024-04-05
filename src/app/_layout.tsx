@@ -1,3 +1,4 @@
+import AuthProvider from '@/providers/AuthProvider'
 import CartProvider from '@/providers/CartProvider'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
@@ -44,22 +45,24 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <CartProvider>
-      <Stack>
-        <Stack.Screen name="(user)" options={{ headerShown: false }} />
-        <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="cart"
-          options={{
-            title: 'Carrinho',
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-          }}
-        />
-      </Stack>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <Stack>
+          <Stack.Screen name="(user)" options={{ headerShown: false }} />
+          <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="cart"
+            options={{
+              title: 'Carrinho',
+              presentation: 'modal',
+              animation: 'slide_from_bottom',
+            }}
+          />
+        </Stack>
+      </CartProvider>
+    </AuthProvider>
   )
 }
 
