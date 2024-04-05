@@ -1,12 +1,45 @@
 import { Link } from 'expo-router'
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
 import Button from '../../components/Button'
 import Colors from '../../constants/Colors'
+import { supabase } from '@/lib/supabase'
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSignUp = async () => {
+    if (!password || !email) {
+      return Alert.alert('Atenção!!', 'Preencha todos os campos.')
+    }
+
+    setLoading(true)
+    const { error } = await supabase.auth.signUp({ email, password })
+
+    if (error) {
+      let message = 'Algo deu errado, tente novamente mais tarde.'
+
+      if (error.message === 'password should be at least 6 characters') {
+        message = 'Senha deve conter pelo menos 6 caracteres.'
+      }
+
+      if (error.message === 'Email rate limit exceeded') {
+        message = 'Número de tentativas esgotado, tente novamente mais tarde.'
+      }
+
+      Alert.alert('Algo deu errado!!', message)
+      setLoading(false)
+      return
+    }
+
+    Alert.alert(
+      'Sucesso!!',
+      'Verifique sua caixa de mensagens para confirmar sua conta.'
+    )
+    setLoading(false)
+  }
 
   return (
     <View style={styles.container}>
@@ -29,7 +62,11 @@ const SignUpScreen = () => {
         secureTextEntry
       />
 
-      <Button text="Criar Conta" />
+      <Button
+        text={loading ? 'Carregando..' : 'Criar Conta'}
+        onPress={handleSignUp}
+        disabled={loading}
+      />
       <Link href="/sign-in" style={styles.textButton}>
         Entrar
       </Link>

@@ -12,7 +12,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/cart` keeps a back button present.
-  initialRouteName: '(user)',
+  initialRouteName: '(auth)',
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
