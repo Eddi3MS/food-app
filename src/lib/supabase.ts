@@ -15,7 +15,7 @@ const ExpoSecureStoreAdapter = {
 }
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASEr_KEY!
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
