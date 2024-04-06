@@ -37,11 +37,21 @@ const ProductDetails = () => {
   }
 
   if (isLoading) {
-    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+    return (
+      <>
+        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+        <Stack.Screen options={{ title: 'Carregando..' }} />
+      </>
+    )
   }
 
   if (!product || error) {
-    return <Text>Produto não encontrado.</Text>
+    return (
+      <>
+        <Text>Produto não encontrado.</Text>
+        <Stack.Screen options={{ title: 'Oops..' }} />
+      </>
+    )
   }
 
   return (

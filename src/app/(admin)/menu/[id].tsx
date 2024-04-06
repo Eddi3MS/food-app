@@ -1,19 +1,39 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
+import { useProduct } from '@/queries/products'
 import { defaultImage } from '@/utils/defaultImage'
 import products from '@assets/data/products'
 import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native'
 
 const ProductDetails = () => {
-  const { productId } = useLocalSearchParams<{ productId: string }>()
-  const product = products.find((product) => {
-    return product.id === +productId
-  })
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const { data: product, error, isLoading } = useProduct(+id)
 
-  if (!product) {
-    return <Text>Produto não encontrado.</Text>
+  if (isLoading) {
+    return (
+      <>
+        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+        <Stack.Screen options={{ title: 'Carregando..' }} />
+      </>
+    )
+  }
+
+  if (!product || error) {
+    return (
+      <>
+        <Text>Produto não encontrado.</Text>
+        <Stack.Screen options={{ title: 'Oops..' }} />
+      </>
+    )
   }
 
   return (
@@ -22,7 +42,7 @@ const ProductDetails = () => {
         options={{
           title: product.name,
           headerRight: () => (
-            <Link href={`/(admin)/menu/create?id=${productId}`} asChild>
+            <Link href={`/(admin)/menu/create?id=${id}`} asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesomeIcon
