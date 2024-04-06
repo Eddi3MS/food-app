@@ -35,7 +35,7 @@ const ProductCard = ({ product }: ProductCardPros) => {
           <Text style={styles.title} numberOfLines={1}>
             {product.name}
           </Text>
-          <Text style={styles.price}>${product.price}</Text>
+          <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
         </Pressable>
       </Link>
     </View>

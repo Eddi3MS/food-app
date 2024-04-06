@@ -19,25 +19,19 @@ const SignUpScreen = () => {
     const { error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
-      let message = 'Algo deu errado, tente novamente mais tarde.'
+      let message = error.message
 
-      if (error.message === 'password should be at least 6 characters') {
+      if (message === 'password should be at least 6 characters') {
         message = 'Senha deve conter pelo menos 6 caracteres.'
       }
 
-      if (error.message === 'Email rate limit exceeded') {
+      if (message === 'Email rate limit exceeded') {
         message = 'Número de tentativas esgotado, tente novamente mais tarde.'
       }
 
       Alert.alert('Algo deu errado!!', message)
-      setLoading(false)
-      return
     }
 
-    Alert.alert(
-      'Sucesso!!',
-      'Verifique sua caixa de mensagens para confirmar sua conta.'
-    )
     setLoading(false)
   }
 

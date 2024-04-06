@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthData>({
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null)
-  const [profile, setProfile] = useState(null)
+  const [profile, setProfile] = useState<AuthData['profile']>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -36,7 +36,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       setSession(session)
 
       if (session) {
-        // fetch profile
         const { data } = await supabase
           .from('profiles')
           .select('*')
@@ -60,7 +59,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         session,
         loading,
         profile,
-        isAdmin: true /* profile?.group === 'ADMIN' */,
+        isAdmin: profile?.group === 'ADMIN',
       }}
     >
       {children}

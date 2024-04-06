@@ -1,5 +1,6 @@
 import AuthProvider from '@/providers/AuthProvider'
 import CartProvider from '@/providers/CartProvider'
+import QueryProvider from '@/providers/QueryProvider'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
@@ -13,7 +14,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/cart` keeps a back button present.
-  initialRouteName: '(auth)',
+  initialRouteName: 'index',
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -45,24 +46,26 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <Stack>
-          <Stack.Screen name="(user)" options={{ headerShown: false }} />
-          <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="cart"
-            options={{
-              title: 'Carrinho',
-              presentation: 'modal',
-              animation: 'slide_from_bottom',
-            }}
-          />
-        </Stack>
-      </CartProvider>
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Stack>
+            <Stack.Screen name="(user)" options={{ headerShown: false }} />
+            <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="cart"
+              options={{
+                title: 'Carrinho',
+                presentation: 'modal',
+                animation: 'slide_from_bottom',
+              }}
+            />
+          </Stack>
+        </CartProvider>
+      </AuthProvider>
+    </QueryProvider>
   )
 }
 

@@ -1,9 +1,9 @@
+import Colors from '@/constants/Colors'
+import { supabase } from '@/lib/supabase'
+import Button from '@components/Button'
 import { Link } from 'expo-router'
 import React, { useState } from 'react'
 import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
-import Button from '@components/Button'
-import Colors from '@/constants/Colors'
-import { supabase } from '@/lib/supabase'
 
 const SignInScreen = () => {
   const [email, setEmail] = useState('')
@@ -20,6 +20,7 @@ const SignInScreen = () => {
       email,
       password,
     })
+
     if (error) {
       Alert.alert('Algo deu errado!!', error.message)
     }

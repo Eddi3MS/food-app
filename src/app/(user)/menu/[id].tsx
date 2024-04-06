@@ -2,12 +2,19 @@ import Button from '@/components/Button'
 import ButtonSelection from '@/components/ButtonSelection'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
+import { useProduct } from '@/queries/products'
 import { PizzaSize } from '@/types'
 import { defaultImage } from '@/utils/defaultImage'
-import products from '@assets/data/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native'
 
 const sizes: PizzaSize[] = ['P', 'M', 'G', 'GG']
 
@@ -22,17 +29,19 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState<PizzaSize>(sizes[0])
   const { addItem } = useCart()
 
-  const { productId } = useLocalSearchParams<{ productId: string }>()
-  const product = products.find((product) => {
-    return product.id === +productId
-  })
-
-  if (!product) {
-    return <Text>Produto não encontrado.</Text>
-  }
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const { data: product, error, isLoading } = useProduct(+id)
 
   const handleAddItemToCart = () => {
     addItem(product, selectedSize)
+  }
+
+  if (isLoading) {
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+  }
+
+  if (!product || error) {
+    return <Text>Produto não encontrado.</Text>
   }
 
   return (
