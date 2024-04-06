@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     width: 15,
     borderRadius: 20,
     aspectRatio: 1,
-    backgroundColor: 'red',
+    backgroundColor: Colors.red,
     top: -8,
     right: 5,
     zIndex: 2,

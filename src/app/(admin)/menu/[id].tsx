@@ -2,7 +2,6 @@ import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
 import { useProduct } from '@/queries/products'
 import { defaultImage } from '@/utils/defaultImage'
-import products from '@assets/data/products'
 import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import {

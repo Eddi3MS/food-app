@@ -1,40 +1,53 @@
-import { View, Text, StyleSheet, Image, TextInput, Alert } from 'react-native'
-import React, { useState } from 'react'
-import Colors from '../../../constants/Colors'
-import Button from '../../../components/Button'
+import Colors from '@/constants/Colors'
+import {
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from '@/queries/products'
+import { defaultImage } from '@/utils/defaultImage'
+import Button from '@components/Button'
 import * as ImagePicker from 'expo-image-picker'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
-import { defaultImage } from '@/utils/defaultImage'
+import React, { useEffect, useState } from 'react'
+import { Alert, Image, StyleSheet, Text, TextInput, View } from 'react-native'
 
 const CreateScreen = () => {
   const [image, setImage] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [errors, setErrors] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const { id } = useLocalSearchParams()
+  const { id } = useLocalSearchParams<{ id?: string }>()
+
   const isUpdating = !!id
+  const { data: updatingProduct } = useProduct(id ? +id : 0)
+
+  useEffect(() => {
+    if (!updatingProduct) return
+
+    setName(updatingProduct.name)
+    setPrice(updatingProduct.price.toFixed(2))
+    setImage(updatingProduct.image)
+  }, [])
+
+  const { mutate: handleCreateProduct } = useInsertProduct()
+  const { mutate: handleUpdateProduct } = useUpdateProduct()
 
   const router = useRouter()
 
-  const validateInput = () => {
-    setErrors('')
-    if (!name) {
-      setErrors('Name is required')
-      return false
-    }
-    if (!price) {
-      setErrors('Price is required')
-      return false
-    }
-    if (isNaN(parseFloat(price))) {
-      setErrors('Price should be a number')
-      return false
-    }
-    return true
-  }
-
   const onSubmit = () => {
+    if (!name || !price) {
+      setErrors('Preencha todos os campos')
+      return
+    }
+
+    if (isNaN(parseFloat(price))) {
+      setErrors('Preço deve ser um número.')
+      return
+    }
+    setLoading(true)
+
     if (isUpdating) {
       onUpdate()
     } else {
@@ -43,23 +56,22 @@ const CreateScreen = () => {
   }
 
   const onUpdate = () => {
-    if (!validateInput()) {
-      return
-    }
+    if (!id) return
 
-    console.warn('Updating dish')
-    router.back()
+    handleUpdateProduct(
+      { name, price: parseFloat(price), id: +id },
+      {
+        onSuccess: () => router.back(),
+      }
+    )
   }
   const onCreate = () => {
-    if (!validateInput()) {
-      return
-    }
-
-    console.warn('Creating dish')
-    setName('')
-    setPrice('')
-    setImage('')
-    router.back()
+    handleCreateProduct(
+      { name, price: parseFloat(price) },
+      {
+        onSuccess: () => router.back(),
+      }
+    )
   }
 
   const onDelete = () => {
@@ -124,12 +136,21 @@ const CreateScreen = () => {
       />
       <Text style={styles.error}>{errors}</Text>
       <Button
-        onPress={onCreate}
-        text={isUpdating ? 'Atualizar' : 'Adicionar'}
+        onPress={onSubmit}
+        text={
+          isUpdating && loading
+            ? 'Atualizando..'
+            : isUpdating
+            ? 'Atualizar'
+            : loading
+            ? 'Adicionando..'
+            : 'Adicionar'
+        }
+        disabled={loading}
       />
       {isUpdating && (
-        <Text style={styles.textButton} onPress={confirmDelete}>
-          Deletar?
+        <Text style={styles.deleteButton} onPress={confirmDelete}>
+          Deletar
         </Text>
       )}
     </View>
@@ -147,8 +168,16 @@ const styles = StyleSheet.create({
   textButton: {
     alignSelf: 'center',
     fontWeight: 'bold',
-    color: Colors.primary,
+    color: Colors.primaryDark,
     marginVertical: 10,
+  },
+  deleteButton: {
+    color: Colors.red,
+    alignSelf: 'center',
+    paddingHorizontal: 10,
+    fontWeight: 'bold',
+    borderBottomWidth: 1,
+    borderColor: Colors.red,
   },
   label: {
     color: Colors.black,
@@ -164,7 +193,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   error: {
-    color: 'red',
+    color: Colors.red,
     textAlign: 'center',
   },
 })

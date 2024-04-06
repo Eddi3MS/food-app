@@ -8,12 +8,16 @@ type ButtonProps = {
 
 const Button = forwardRef<View | null, ButtonProps>(
   ({ text, ...pressableProps }, ref) => {
+    console.log(pressableProps.disabled)
+    const baseStyle = [styles.pressable]
     return (
-      <View style={styles.container}>
+      <View
+        style={[styles.container, pressableProps.disabled && styles.disabled]}
+      >
         <Pressable
           ref={ref}
           style={({ pressed }) =>
-            pressed ? [styles.pressable, styles.pressed] : styles.pressable
+            pressed ? [...baseStyle, styles.pressed] : baseStyle
           }
           android_ripple={{ color: Colors.primaryDark }}
           {...pressableProps}
@@ -35,6 +39,9 @@ const styles = StyleSheet.create({
   pressable: {
     alignItems: 'center',
     padding: 10,
+  },
+  disabled: {
+    opacity: 0.5,
   },
   pressed: {
     opacity: 0.75,
