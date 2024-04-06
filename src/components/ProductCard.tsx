@@ -1,3 +1,4 @@
+import { Tables } from '@/types'
 import { Link, useSegments } from 'expo-router'
 import {
   Dimensions,
@@ -8,9 +9,8 @@ import {
   View,
 } from 'react-native'
 import Colors from '../constants/Colors'
-import { Product } from '../types'
 
-type ProductCardPros = { product: Product }
+type ProductCardPros = { product: Tables<'products'> }
 
 const ProductCard = ({ product }: ProductCardPros) => {
   const segments = useSegments<['(admin)', 'menu'] | ['(user)', 'menu']>()

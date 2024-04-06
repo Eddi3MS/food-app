@@ -8,8 +8,6 @@ type ButtonProps = {
 
 const Button = forwardRef<View | null, ButtonProps>(
   ({ text, ...pressableProps }, ref) => {
-    console.log(pressableProps.disabled)
-    const baseStyle = [styles.pressable]
     return (
       <View
         style={[styles.container, pressableProps.disabled && styles.disabled]}
@@ -17,7 +15,7 @@ const Button = forwardRef<View | null, ButtonProps>(
         <Pressable
           ref={ref}
           style={({ pressed }) =>
-            pressed ? [...baseStyle, styles.pressed] : baseStyle
+            pressed ? [styles.pressable, styles.pressed] : styles.pressable
           }
           android_ripple={{ color: Colors.primaryDark }}
           {...pressableProps}
