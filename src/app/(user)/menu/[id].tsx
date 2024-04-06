@@ -103,7 +103,7 @@ const ProductDetails = () => {
       </ButtonSelection>
 
       <Text style={styles.price}>
-        ${(product.price * valueMultiplier[selectedSize]).toFixed(2)}
+        R$ {(product.price * valueMultiplier[selectedSize]).toFixed(2)}
       </Text>
       <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
     </ScrollView>

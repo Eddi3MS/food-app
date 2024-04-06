@@ -66,7 +66,7 @@ const ProductDetails = () => {
       />
 
       <Text style={styles.title}>{product.name}</Text>
-      <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+      <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
     </ScrollView>
   )
 }

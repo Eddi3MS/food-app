@@ -1,5 +1,6 @@
 import Colors from '@/constants/Colors'
 import {
+  useDeleteProduct,
   useInsertProduct,
   useProduct,
   useUpdateProduct,
@@ -9,7 +10,15 @@ import Button from '@components/Button'
 import * as ImagePicker from 'expo-image-picker'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native'
 
 const CreateScreen = () => {
   const [image, setImage] = useState<string | null>(null)
@@ -17,6 +26,7 @@ const CreateScreen = () => {
   const [price, setPrice] = useState('')
   const [errors, setErrors] = useState('')
   const [loading, setLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   const { id } = useLocalSearchParams<{ id?: string }>()
 
@@ -33,6 +43,7 @@ const CreateScreen = () => {
 
   const { mutate: handleCreateProduct } = useInsertProduct()
   const { mutate: handleUpdateProduct } = useUpdateProduct()
+  const { mutate: handleDeleteProduct } = useDeleteProduct()
 
   const router = useRouter()
 
@@ -75,12 +86,22 @@ const CreateScreen = () => {
   }
 
   const onDelete = () => {
-    console.warn('deletado')
+    if (!id) return
+
+    handleDeleteProduct(+id, {
+      onSuccess: () => router.replace('/(admin)/menu'),
+    })
   }
 
   const confirmDelete = () => {
+    setDeleteLoading(true)
+
     Alert.alert('Confirme', 'Deletar produto do database?', [
-      { text: 'cancelar', style: 'cancel' },
+      {
+        text: 'cancelar',
+        style: 'cancel',
+        onPress: () => setDeleteLoading(false),
+      },
       { text: 'Deletar', style: 'destructive', onPress: onDelete },
     ])
   }
@@ -149,9 +170,11 @@ const CreateScreen = () => {
         disabled={loading}
       />
       {isUpdating && (
-        <Text style={styles.deleteButton} onPress={confirmDelete}>
-          Deletar
-        </Text>
+        <Pressable onPress={confirmDelete} disabled={deleteLoading}>
+          <Text style={styles.deleteButton}>
+            {deleteLoading ? 'Deletando..' : 'Deletar'}
+          </Text>
+        </Pressable>
       )}
     </View>
   )
