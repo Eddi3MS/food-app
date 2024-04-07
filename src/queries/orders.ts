@@ -70,7 +70,7 @@ export const useInsertOrder = () => {
   const userId = session?.user.id
 
   return useMutation({
-    async mutationFn(data: InsertTables<'orders'>) {
+    async mutationFn(data: Pick<InsertTables<'orders'>, 'total'>) {
       const { error, data: newProduct } = await supabase
         .from('orders')
         .insert({ ...data, user_id: userId! })
@@ -84,6 +84,22 @@ export const useInsertOrder = () => {
     },
     async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ['orders'] })
+    },
+  })
+}
+
+export const useInsertOrderItems = () => {
+  return useMutation({
+    async mutationFn(items: InsertTables<'order_items'>[]) {
+      const { error, data: newProduct } = await supabase
+        .from('order_items')
+        .insert(items)
+        .select()
+
+      if (error) {
+        throw new Error(error.message)
+      }
+      return newProduct
     },
   })
 }

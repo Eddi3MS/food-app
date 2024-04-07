@@ -1,12 +1,16 @@
 import { randomUUID } from 'expo-crypto'
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import { CartItem, Tables } from '../types'
+import { useInsertOrder, useInsertOrderItems } from '@/queries/orders'
+import { router } from 'expo-router'
 
 type CartType = {
   items: CartItem[]
   addItem: (product: Tables<'products'>, size: CartItem['size']) => void
   updateQuantity: (itemId: string, amount: 1 | -1) => void
   total: number
+  checkout: () => void
+  loading: boolean
 }
 
 const CartContext = createContext<CartType>({
@@ -14,15 +18,25 @@ const CartContext = createContext<CartType>({
   addItem: () => {},
   updateQuantity: () => {},
   total: 0,
+  checkout: () => {},
+  loading: false,
 })
 
 export default function CartProvider({ children }: PropsWithChildren) {
   const [items, setItems] = useState<CartItem[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const { mutate: handleInsertOrder } = useInsertOrder()
+  const { mutate: handleInsertOrderItems } = useInsertOrderItems()
 
   const total = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   )
+
+  const handleClearCart = () => {
+    setItems([])
+  }
 
   const addItem = (product: Tables<'products'>, size: CartItem['size']) => {
     const existingItem = items.find(
@@ -53,8 +67,45 @@ export default function CartProvider({ children }: PropsWithChildren) {
     )
   }
 
+  const handleCheckout = async () => {
+    setLoading(true)
+    handleInsertOrder(
+      { total },
+      {
+        onSuccess: saveOrderItems,
+        onError: () => setLoading(false),
+      }
+    )
+  }
+
+  const saveOrderItems = (order: Tables<'orders'>) => {
+    const orderItems = items.map((cartItem) => ({
+      order_id: order.id,
+      product_id: cartItem.product.id,
+      quantity: cartItem.quantity,
+      size: cartItem.size,
+    }))
+
+    handleInsertOrderItems(orderItems, {
+      onSuccess() {
+        router.push(`/(user)/orders/${order.id}`)
+        handleClearCart()
+      },
+      onSettled: () => setLoading(false),
+    })
+  }
+
   return (
-    <CartContext.Provider value={{ items, addItem, updateQuantity, total }}>
+    <CartContext.Provider
+      value={{
+        items,
+        addItem,
+        updateQuantity,
+        total,
+        checkout: handleCheckout,
+        loading,
+      }}
+    >
       {children}
     </CartContext.Provider>
   )
