@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
+import { Tables } from '@/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
@@ -12,8 +13,12 @@ export const useInsertOrderSubscription = () => {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'orders' },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['orders'] })
+
+        (update: { new: Tables<'orders'> }) => {
+          queryClient.setQueryData(
+            ['orders', { statuses: ['Novo'] }],
+            (data: Tables<'orders'>[]) => [update.new, ...data]
+          )
         }
       )
       .subscribe()
@@ -38,8 +43,13 @@ export const useUpdateOrderSubscription = (id: number) => {
           table: 'orders',
           filter: `id=eq.${id}`,
         },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['orders', id] })
+        (update: { new: Tables<'orders'> }) => {
+          queryClient.setQueryData(
+            ['orders', id],
+            (
+              data: Tables<'orders'> & { order_items: Tables<'order_items'> }
+            ) => ({ ...data, status: update.new.status })
+          )
         }
       )
       .subscribe()
@@ -66,10 +76,13 @@ export const useUpdateMyOrderListSubscription = () => {
           table: 'orders',
           filter: `user_id=eq.${id}`,
         },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ['orders', { userId: id }],
-          })
+
+        (update: { new: Tables<'orders'> }) => {
+          queryClient.setQueryData(
+            ['orders', { userId: id }],
+            (data: Tables<'orders'>[]) =>
+              data.map((d) => (d.id === update.new.id ? update.new : d))
+          )
         }
       )
       .subscribe()
