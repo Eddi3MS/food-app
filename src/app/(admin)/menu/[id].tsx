@@ -1,3 +1,4 @@
+import CenteredFeedback from '@/components/CenteredFeedback'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
 import { useProduct } from '@/queries/products'
@@ -26,11 +27,20 @@ const ProductDetails = () => {
     )
   }
 
-  if (!product || error) {
+  if (error) {
     return (
       <>
-        <Text>Produto não encontrado.</Text>
+        <CenteredFeedback text="Erro ao listar produto." />
         <Stack.Screen options={{ title: 'Oops..' }} />
+      </>
+    )
+  }
+
+  if (!product) {
+    return (
+      <>
+        <Stack.Screen options={{ title: 'Oops..' }} />
+        <CenteredFeedback text="Produto não encontrado." />
       </>
     )
   }

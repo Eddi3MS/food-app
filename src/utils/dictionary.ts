@@ -1,4 +1,4 @@
-import { PizzaSize } from '@/types'
+import { Enums } from '@/types'
 
 const sizeNames = {
   P: 'Pequena',
@@ -7,6 +7,6 @@ const sizeNames = {
   GG: 'Extra Grande',
 }
 
-export function sizeName(size: PizzaSize) {
+export function sizeName(size: Enums<'sizes'>) {
   return sizeNames[size]
 }

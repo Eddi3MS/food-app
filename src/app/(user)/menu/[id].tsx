@@ -1,9 +1,10 @@
 import Button from '@/components/Button'
 import ButtonSelection from '@/components/ButtonSelection'
+import CenteredFeedback from '@/components/CenteredFeedback'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { useProduct } from '@/queries/products'
-import { PizzaSize } from '@/types'
+import { Enums } from '@/types'
 import { defaultImage } from '@/utils/defaultImage'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
@@ -16,7 +17,7 @@ import {
   Text,
 } from 'react-native'
 
-const sizes: PizzaSize[] = ['P', 'M', 'G', 'GG']
+const sizes: Enums<'sizes'>[] = ['P', 'M', 'G', 'GG']
 
 const valueMultiplier = {
   P: 1,
@@ -26,15 +27,11 @@ const valueMultiplier = {
 }
 
 const ProductDetails = () => {
-  const [selectedSize, setSelectedSize] = useState<PizzaSize>(sizes[0])
+  const [selectedSize, setSelectedSize] = useState<Enums<'sizes'>>(sizes[0])
   const { addItem } = useCart()
 
   const { id } = useLocalSearchParams<{ id: string }>()
   const { data: product, error, isLoading } = useProduct(+id)
-
-  const handleAddItemToCart = () => {
-    addItem(product, selectedSize)
-  }
 
   if (isLoading) {
     return (
@@ -48,10 +45,14 @@ const ProductDetails = () => {
   if (!product || error) {
     return (
       <>
-        <Text>Produto não encontrado.</Text>
+        <CenteredFeedback text="Produto não encontrado." />
         <Stack.Screen options={{ title: 'Oops..' }} />
       </>
     )
+  }
+
+  const handleAddItemToCart = () => {
+    addItem(product, selectedSize)
   }
 
   return (

@@ -4,7 +4,7 @@ import { withLayoutContext } from 'expo-router'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const Tab = withLayoutContext(createMaterialTopTabNavigator().Navigator)
+const Tabs = withLayoutContext(createMaterialTopTabNavigator().Navigator)
 
 const ListLayout = () => {
   return (
@@ -12,7 +12,7 @@ const ListLayout = () => {
       edges={['top']}
       style={{ flex: 1, backgroundColor: Colors.white }}
     >
-      <Tab
+      <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors.primary,
           tabBarInactiveTintColor: Colors.gray,
@@ -21,7 +21,11 @@ const ListLayout = () => {
             backgroundColor: Colors.primary,
           },
         }}
-      />
+      >
+        <Tabs.Screen name="index" options={{ title: 'Novos' }} />
+        <Tabs.Screen name="received" options={{ title: 'Em Andamento' }} />
+        <Tabs.Screen name="arquive" options={{ title: 'Finalizados' }} />
+      </Tabs>
     </SafeAreaView>
   )
 }

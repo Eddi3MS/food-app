@@ -1,3 +1,4 @@
+import CenteredFeedback from '@/components/CenteredFeedback'
 import Colors from '@/constants/Colors'
 import { useProductList } from '@/queries/products'
 import ProductCard from '@components/ProductCard'
@@ -11,7 +12,11 @@ export default function ProductsList() {
   }
 
   if (error) {
-    return <Text>Erro ao listar produtos.</Text>
+    return <CenteredFeedback text="Erro ao listar produtos." />
+  }
+
+  if (!data) {
+    return <CenteredFeedback text="Nenhum produto cadastrado." />
   }
 
   return (
