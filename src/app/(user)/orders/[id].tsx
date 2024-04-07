@@ -1,20 +1,45 @@
+import CenteredFeedback from '@/components/CenteredFeedback'
 import OrderListCard from '@/components/OrderListCard'
 import OrderProductCard from '@/components/OrderProductCard'
-import orders from '@assets/data/orders'
+import Colors from '@/constants/Colors'
+import { useOrderDetails } from '@/queries/orders'
 import { Stack, useLocalSearchParams } from 'expo-router'
-import { FlatList, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 
 export default function OrderDetailsScreen() {
-  const { id } = useLocalSearchParams()
+  const { id } = useLocalSearchParams<{ id: string }>()
 
-  const order = orders.find((o) => o.id.toString() === id)
+  const { data, error, isLoading } = useOrderDetails(+id)
 
-  if (!order) {
-    return <Text>Not found</Text>
+  if (isLoading) {
+    return (
+      <>
+        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+        <Stack.Screen options={{ title: 'Carregando..' }} />
+      </>
+    )
   }
 
-  const total = order.order_items?.reduce((acc, att) => {
-    return (acc += att.quantity * att.products.price)
+  if (error) {
+    return (
+      <>
+        <CenteredFeedback text="Erro ao listar produto." />
+        <Stack.Screen options={{ title: 'Oops..' }} />
+      </>
+    )
+  }
+
+  if (!data) {
+    return (
+      <>
+        <CenteredFeedback text="Produto não encontrado." />
+        <Stack.Screen options={{ title: 'Oops..' }} />
+      </>
+    )
+  }
+
+  const total = data.order_items?.reduce((acc, att) => {
+    return (acc += att.quantity * att.products!.price)
   }, 0)
 
   return (
@@ -22,10 +47,12 @@ export default function OrderDetailsScreen() {
       <Stack.Screen options={{ title: `Pedido #${id}` }} />
 
       <FlatList
-        data={order.order_items}
-        renderItem={({ item }) => <OrderProductCard item={item} />}
+        data={data.order_items}
+        renderItem={({ item }) => (
+          <OrderProductCard item={{ ...item, products: item.products! }} />
+        )}
         contentContainerStyle={{ gap: 10 }}
-        ListHeaderComponent={() => <OrderListCard order={order} />}
+        ListHeaderComponent={() => <OrderListCard order={data} />}
       />
       <View
         style={{

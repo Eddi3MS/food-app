@@ -1,12 +1,12 @@
 import { defaultImage } from '@/utils/defaultImage'
+import { sizeName } from '@/utils/dictionary'
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
-import { OrderItem } from '../types'
-import { sizeName } from '@/utils/dictionary'
+import { Tables } from '../types'
 
 type OrderProductCardProps = {
-  item: OrderItem
+  item: Tables<'order_items'> & { products: Tables<'products'> }
 }
 
 const OrderProductCard = ({ item }: OrderProductCardProps) => {

@@ -1,17 +1,30 @@
+import CenteredFeedback from '@/components/CenteredFeedback'
 import OrderListCard from '@/components/OrderListCard'
-import orders from '@assets/data/orders'
+import Colors from '@/constants/Colors'
+import { useAdminOrderList } from '@/queries/orders'
 import { Tabs } from 'expo-router'
-import { FlatList } from 'react-native'
+import { ActivityIndicator, FlatList, Text } from 'react-native'
 
 export default function OrdersScreen() {
+  const { data, isLoading, error } = useAdminOrderList({ statuses: ['Novo'] })
+
+  if (isLoading) {
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+  }
+
+  if (error) {
+    return <CenteredFeedback text="Erro ao listar produtos." />
+  }
+
+  if (!data) {
+    return <CenteredFeedback text="Nenhum pedido encontrado." />
+  }
+
   return (
-    <>
-      <Tabs.Screen options={{ title: 'Recentes' }} />
-      <FlatList
-        data={orders.filter((o) => o.status !== 'Entregue')}
-        renderItem={({ item }) => <OrderListCard order={item} />}
-        contentContainerStyle={{ gap: 10, padding: 10 }}
-      />
-    </>
+    <FlatList
+      data={data}
+      renderItem={({ item }) => <OrderListCard order={item} />}
+      contentContainerStyle={{ gap: 10, padding: 10 }}
+    />
   )
 }

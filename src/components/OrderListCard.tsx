@@ -1,11 +1,11 @@
+import { Tables } from '@/types'
 import { formatToRelativeTime } from '@/utils/dayjs'
 import { Link, useSegments } from 'expo-router'
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Order } from '../types'
 
 type OrderListCardProps = {
-  order: Order
+  order: Tables<'orders'>
 }
 
 const OrderListCard = ({ order }: OrderListCardProps) => {

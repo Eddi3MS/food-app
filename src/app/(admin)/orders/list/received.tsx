@@ -2,12 +2,11 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import OrderListCard from '@/components/OrderListCard'
 import Colors from '@/constants/Colors'
 import { useAdminOrderList } from '@/queries/orders'
-import { Stack } from 'expo-router'
 import { ActivityIndicator, FlatList, Text } from 'react-native'
 
-export default function ArquiveOrdersScreen() {
+export default function ReceivedOrdersScreen() {
   const { data, isLoading, error } = useAdminOrderList({
-    statuses: ['Entregue'],
+    statuses: ['Preparando', 'Saiu p/ Entrega'],
   })
 
   if (isLoading) {
