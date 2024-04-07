@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/providers/AuthProvider'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
@@ -7,12 +8,11 @@ export const useInsertOrderSubscription = () => {
 
   useEffect(() => {
     const ordersSubscription = supabase
-      .channel('custom-insert-channel')
+      .channel('admin-insert-order-channel')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'orders' },
-        (payload) => {
-          console.log('Change received!', payload)
+        () => {
           queryClient.invalidateQueries({ queryKey: ['orders'] })
         }
       )
@@ -28,8 +28,8 @@ export const useUpdateOrderSubscription = (id: number) => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    const orders = supabase
-      .channel('custom-filter-channel')
+    const order = supabase
+      .channel('user-order-details-update-channel')
       .on(
         'postgres_changes',
         {
@@ -40,6 +40,36 @@ export const useUpdateOrderSubscription = (id: number) => {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ['orders', id] })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      order.unsubscribe()
+    }
+  }, [])
+}
+
+export const useUpdateMyOrderListSubscription = () => {
+  const { session } = useAuth()
+  const id = session?.user.id!
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const orders = supabase
+      .channel('user-orders-list-update-channel')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'orders',
+          filter: `user_id=eq.${id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({
+            queryKey: ['orders', { userId: id }],
+          })
         }
       )
       .subscribe()
