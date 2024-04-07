@@ -3,9 +3,10 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import OrderListCard from '@/components/OrderListCard'
 import OrderProductCard from '@/components/OrderProductCard'
 import Colors from '@/constants/Colors'
-import { useOrderDetails } from '@/queries/orders'
-import { OrderStatusList } from '@/types'
+import { useOrderDetails, useUpdateOrder } from '@/queries/orders'
+import { Enums, OrderStatusList } from '@/types'
 import { Stack, useLocalSearchParams } from 'expo-router'
+import { useState } from 'react'
 import {
   ActivityIndicator,
   FlatList,
@@ -15,8 +16,10 @@ import {
 } from 'react-native'
 
 export default function OrderDetailsScreen() {
+  const [loading, setLoading] = useState(false)
   const { id } = useLocalSearchParams<{ id: string }>()
   const { data, error, isLoading } = useOrderDetails(+id)
+  const { mutate: handleUpdateOrder } = useUpdateOrder()
 
   if (isLoading) {
     return (
@@ -45,6 +48,19 @@ export default function OrderDetailsScreen() {
     )
   }
 
+  const handleUpdateStatus = async (status: Enums<'statuses'>) => {
+    setLoading(true)
+    handleUpdateOrder(
+      {
+        id: +id,
+        updatedFields: { status },
+      },
+      {
+        onSettled: () => setLoading(false),
+      }
+    )
+  }
+
   return (
     <View style={{ padding: 10, gap: 20, flex: 1 }}>
       <Stack.Screen options={{ title: `Pedido #${id}` }} />
@@ -66,7 +82,7 @@ export default function OrderDetailsScreen() {
             {(status) => (
               <Pressable
                 key={status}
-                onPress={() => console.warn('Update status')}
+                onPress={handleUpdateStatus.bind(null, status)}
                 style={{
                   borderColor: Colors.primary,
                   borderWidth: 1,
@@ -75,7 +91,9 @@ export default function OrderDetailsScreen() {
                   marginVertical: 10,
                   backgroundColor:
                     data.status === status ? Colors.primary : 'transparent',
+                  ...(loading && { opacity: 0.5 }),
                 }}
+                disabled={loading}
               >
                 <Text
                   style={{

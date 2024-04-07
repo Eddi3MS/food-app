@@ -72,13 +72,13 @@ export default function CartProvider({ children }: PropsWithChildren) {
     handleInsertOrder(
       { total },
       {
-        onSuccess: saveOrderItems,
+        onSuccess: handleSaveOrderItems,
         onError: () => setLoading(false),
       }
     )
   }
 
-  const saveOrderItems = (order: Tables<'orders'>) => {
+  const handleSaveOrderItems = (order: Tables<'orders'>) => {
     const orderItems = items.map((cartItem) => ({
       order_id: order.id,
       product_id: cartItem.product.id,
