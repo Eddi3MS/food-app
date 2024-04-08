@@ -1,10 +1,10 @@
-import { defaultImage } from '@/utils/defaultImage'
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { useCart } from '../providers/CartProvider'
 import { CartItem } from '../types'
 import FontAwesomeIcon from './FontAwesomeIcon'
+import RemoteImage from './RemoteImage'
 
 type CartCardProps = {
   cartItem: CartItem
@@ -15,10 +15,9 @@ const CartCard = ({ cartItem }: CartCardProps) => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{
-          uri: defaultImage(cartItem.product.image),
-        }}
+      <RemoteImage
+        path={cartItem.product.image}
+        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
         style={styles.image}
         resizeMode="contain"
       />

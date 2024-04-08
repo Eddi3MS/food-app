@@ -1,18 +1,22 @@
+import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
+import { supabase } from '@/lib/supabase'
 import {
   useDeleteProduct,
   useInsertProduct,
   useProduct,
   useUpdateProduct,
 } from '@/queries/products'
-import { defaultImage } from '@/utils/defaultImage'
+import { Tables } from '@/types'
 import Button from '@components/Button'
+import { decode } from 'base64-arraybuffer'
+import { randomUUID } from 'expo-crypto'
+import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
   Alert,
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -66,23 +70,41 @@ const CreateScreen = () => {
     }
   }
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
     if (!id) return
 
-    handleUpdateProduct(
-      { name, price: parseFloat(price), id: +id },
-      {
-        onSuccess: () => router.back(),
-      }
-    )
+    const imagePath = await uploadImage()
+
+    const updatedProduct: Partial<Tables<'products'>> = {
+      name,
+      price: parseFloat(price),
+      id: +id,
+    }
+
+    if (imagePath) {
+      updatedProduct.image = imagePath
+    }
+
+    handleUpdateProduct(updatedProduct, {
+      onSuccess: () => router.back(),
+    })
   }
-  const onCreate = () => {
-    handleCreateProduct(
-      { name, price: parseFloat(price) },
-      {
-        onSuccess: () => router.back(),
-      }
-    )
+
+  const onCreate = async () => {
+    const imagePath = await uploadImage()
+
+    const newProduct: Partial<Tables<'products'>> = {
+      name,
+      price: parseFloat(price),
+    }
+
+    if (imagePath) {
+      newProduct.image = imagePath
+    }
+
+    handleCreateProduct(newProduct, {
+      onSuccess: () => router.back(),
+    })
   }
 
   const onDelete = () => {
@@ -111,7 +133,7 @@ const CreateScreen = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     })
 
@@ -119,6 +141,28 @@ const CreateScreen = () => {
       setImage(result.assets[0].uri)
     }
   }
+
+  const uploadImage = async () => {
+    if (!image?.startsWith('file://')) {
+      return
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    })
+
+    const filePath = `${randomUUID()}.png`
+    const contentType = 'image/png'
+
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, decode(base64), { contentType })
+
+    if (data) {
+      return data.path
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -126,11 +170,14 @@ const CreateScreen = () => {
           title: isUpdating ? 'Atualizar produto' : 'Adicionar produto',
         }}
       />
-      <Image
-        source={{ uri: defaultImage(image) }}
+
+      <RemoteImage
+        path={image}
+        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
         style={styles.image}
         resizeMode="contain"
       />
+
       <Text onPress={pickImage} style={styles.textButton}>
         Select Image
       </Text>

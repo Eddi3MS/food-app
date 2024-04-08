@@ -1,21 +1,13 @@
 import { Tables } from '@/types'
 import { Link, useSegments } from 'expo-router'
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
+import RemoteImage from './RemoteImage'
 
 type ProductCardPros = { product: Tables<'products'> }
 
 const ProductCard = ({ product }: ProductCardPros) => {
   const segments = useSegments<['(admin)', 'menu'] | ['(user)', 'menu']>()
-
-  const productImage = product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE
 
   return (
     <View
@@ -27,8 +19,9 @@ const ProductCard = ({ product }: ProductCardPros) => {
     >
       <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
         <Pressable style={styles.Pressable}>
-          <Image
-            source={{ uri: productImage }}
+          <RemoteImage
+            path={product.image}
+            fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
             style={styles.image}
             resizeMode="contain"
           />

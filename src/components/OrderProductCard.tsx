@@ -1,9 +1,9 @@
-import { defaultImage } from '@/utils/defaultImage'
 import { sizeName } from '@/utils/dictionary'
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { Tables } from '../types'
+import RemoteImage from './RemoteImage'
 
 type OrderProductCardProps = {
   item: Tables<'order_items'> & { products: Tables<'products'> }
@@ -43,10 +43,10 @@ const OrderProductCard = ({ item }: OrderProductCardProps) => {
           </View>
         )}
       </View>
-      <Image
-        source={{
-          uri: defaultImage(item.products.image),
-        }}
+
+      <RemoteImage
+        path={item.products.image}
+        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
         style={styles.image}
         resizeMode="contain"
       />

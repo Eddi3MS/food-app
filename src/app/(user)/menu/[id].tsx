@@ -1,16 +1,15 @@
 import Button from '@/components/Button'
 import ButtonSelection from '@/components/ButtonSelection'
 import CenteredFeedback from '@/components/CenteredFeedback'
+import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { useProduct } from '@/queries/products'
 import { Enums } from '@/types'
-import { defaultImage } from '@/utils/defaultImage'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -58,13 +57,13 @@ const ProductDetails = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
-      <Image
-        source={{
-          uri: defaultImage(product.image),
-        }}
+      <RemoteImage
+        path={product.image}
+        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
         style={styles.image}
         resizeMode="contain"
       />
+
       <ButtonSelection
         options={sizes}
         keyExtractor={(size) => size}
