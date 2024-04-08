@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 75,
-    aspectRatio: 1,
     alignSelf: 'center',
     marginRight: 10,
   },

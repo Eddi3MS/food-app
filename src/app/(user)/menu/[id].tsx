@@ -120,8 +120,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   image: {
-    width: '100%',
-    aspectRatio: 1,
     alignSelf: 'center',
   },
   title: {

@@ -230,7 +230,6 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '50%',
-    aspectRatio: 1,
     alignSelf: 'center',
   },
   textButton: {

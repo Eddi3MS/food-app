@@ -22,7 +22,6 @@ const ProductCard = ({ product }: ProductCardPros) => {
           <RemoteImage
             path={product.image}
             fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
-            style={styles.image}
             resizeMode="contain"
           />
           <Text style={styles.title} numberOfLines={1}>
@@ -46,10 +45,6 @@ const styles = StyleSheet.create({
   Pressable: {
     padding: 10,
     flex: 1,
-  },
-  image: {
-    width: '100%',
-    aspectRatio: 1,
   },
   title: {
     fontSize: 18,

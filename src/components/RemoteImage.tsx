@@ -1,4 +1,4 @@
-import { Image } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import React, { ComponentProps, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
@@ -7,7 +7,12 @@ type RemoteImageProps = {
   fallback: string
 } & Omit<ComponentProps<typeof Image>, 'source'>
 
-const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
+const RemoteImage = ({
+  path,
+  fallback,
+  style,
+  ...imageProps
+}: RemoteImageProps) => {
   const [image, setImage] = useState('')
 
   useEffect(() => {
@@ -36,7 +41,20 @@ const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
     loadImageFromSupabase()
   }, [path])
 
-  return <Image source={{ uri: image || fallback }} {...imageProps} />
+  return (
+    <Image
+      source={{ uri: image || fallback }}
+      {...imageProps}
+      style={[styles.image, style]}
+    />
+  )
 }
 
 export default RemoteImage
+
+const styles = StyleSheet.create({
+  image: {
+    aspectRatio: 1,
+    borderRadius: 6,
+  },
+})
