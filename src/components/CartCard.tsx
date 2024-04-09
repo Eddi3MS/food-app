@@ -4,6 +4,7 @@ import Colors from '../constants/Colors'
 import { useCart } from '../providers/CartProvider'
 import { CartItem } from '../types'
 import FontAwesomeIcon from './FontAwesomeIcon'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 type CartCardProps = {
   cartItem: CartItem
@@ -26,7 +27,7 @@ const CartCard = ({ cartItem }: CartCardProps) => {
         <Text style={styles.title}>{cartItem.product.name}</Text>
         <View style={styles.subtitleContainer}>
           <Text style={styles.price}>
-            R$ {cartItem.product.price.toFixed(2)}
+            {formatCurrency(cartItem.product.price)}
           </Text>
           <Text>Tamanho: {cartItem.product.size}</Text>
         </View>

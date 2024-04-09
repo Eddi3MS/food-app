@@ -3,6 +3,7 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { useProduct } from '@/queries/products'
+import { formatCurrency } from '@/utils/formatCurrency'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import {
@@ -53,7 +54,7 @@ const ProductDetails = () => {
         resizeMode="contain"
       />
       <Text style={styles.text}>{product.description}</Text>
-      <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+      <Text style={styles.price}>{formatCurrency(product.price)}</Text>
 
       <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
     </ScrollView>

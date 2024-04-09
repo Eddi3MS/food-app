@@ -2,6 +2,7 @@ import { Tables } from '@/types'
 import { Link, useSegments } from 'expo-router'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 type ProductCardPros = { product: Tables<'products'> }
 
@@ -24,7 +25,7 @@ const ProductCard = ({ product }: ProductCardPros) => {
               {product.name}
             </Text>
             <Text>{product.description}</Text>
-            <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+            <Text style={styles.price}>{formatCurrency(product.price)}</Text>
           </View>
         </Pressable>
       </Link>

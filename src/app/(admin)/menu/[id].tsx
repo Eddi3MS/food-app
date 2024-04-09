@@ -2,6 +2,7 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
 import { useProduct } from '@/queries/products'
+import { formatCurrency } from '@/utils/formatCurrency'
 import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import {
@@ -76,7 +77,7 @@ const ProductDetails = () => {
 
       <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.text}>{product.description}</Text>
-      <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+      <Text style={styles.price}>{formatCurrency(product.price)}</Text>
     </ScrollView>
   )
 }

@@ -3,6 +3,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { Tables } from '../types'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 type OrderProductCardProps = {
   item: Tables<'order_items'> & { products: Tables<'products'> }
@@ -27,7 +28,9 @@ const OrderProductCard = ({ item }: OrderProductCardProps) => {
 
         <View style={styles.subtitleContainer}>
           <Text>
-            <Text style={styles.price}>R${item.products.price.toFixed(2)}</Text>{' '}
+            <Text style={styles.price}>
+              {formatCurrency(item.products.price)}
+            </Text>{' '}
             unid.
           </Text>
         </View>
@@ -35,7 +38,7 @@ const OrderProductCard = ({ item }: OrderProductCardProps) => {
           <View style={styles.subtitleContainer}>
             <Text>
               <Text style={styles.price}>
-                R${(item.quantity * item.products.price).toFixed(2)}
+                {formatCurrency(item.quantity * item.products.price)}
               </Text>{' '}
               total.
             </Text>

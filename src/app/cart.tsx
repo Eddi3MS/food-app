@@ -2,6 +2,7 @@ import Button from '@/components/Button'
 import CartCard from '@/components/CartCard'
 import EmptyCartCard from '@/components/EmptyCartCard'
 import { useCart } from '@/providers/CartProvider'
+import { formatCurrency } from '@/utils/formatCurrency'
 import { StatusBar } from 'expo-status-bar'
 import { FlatList, Platform, StyleSheet, Text, View } from 'react-native'
 
@@ -20,7 +21,7 @@ const CartScreen = () => {
         contentContainerStyle={{ gap: 10 }}
       />
 
-      <Text style={styles.totalText}>Total: ${total}</Text>
+      <Text style={styles.totalText}>Total: {formatCurrency(total)}</Text>
       <Button
         onPress={checkout}
         text={loading ? 'Finalizando..' : 'Finalizar'}
