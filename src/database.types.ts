@@ -114,8 +114,8 @@ export type Database = {
         Row: {
           avatar_url: string | null
           full_name: string | null
-          group: string
           id: string
+          role: Database["public"]["Enums"]["roles"]
           updated_at: string | null
           username: string | null
           website: string | null
@@ -123,8 +123,8 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           full_name?: string | null
-          group?: string
           id: string
+          role?: Database["public"]["Enums"]["roles"]
           updated_at?: string | null
           username?: string | null
           website?: string | null
@@ -132,8 +132,8 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           full_name?: string | null
-          group?: string
           id?: string
+          role?: Database["public"]["Enums"]["roles"]
           updated_at?: string | null
           username?: string | null
           website?: string | null
@@ -156,6 +156,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      roles: "ADMIN" | "USER"
       sizes: "P" | "M" | "G" | "GG"
       statuses: "Novo" | "Preparando" | "Saiu p/ Entrega" | "Entregue"
     }

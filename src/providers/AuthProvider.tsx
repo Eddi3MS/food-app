@@ -73,7 +73,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         session,
         loading,
         profile,
-        isAdmin: profile?.group === 'ADMIN',
+        isAdmin: profile?.role === 'ADMIN',
       }}
     >
       {children}
