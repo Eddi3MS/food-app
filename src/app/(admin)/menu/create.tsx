@@ -32,6 +32,7 @@ const CreateScreen = () => {
   const [image, setImage] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
+  const [description, setDescription] = useState('')
   const [selectedSize, setSelectedSize] = useState<Enums<'sizes'>>(sizes[0])
   const [errors, setErrors] = useState('')
   const [loading, setLoading] = useState(false)
@@ -49,6 +50,7 @@ const CreateScreen = () => {
     setPrice(updatingProduct.price.toFixed(2))
     setImage(updatingProduct.image)
     setSelectedSize(updatingProduct.size)
+    setDescription(updatingProduct.description)
   }, [])
 
   const { mutate: handleCreateProduct } = useInsertProduct()
@@ -58,7 +60,7 @@ const CreateScreen = () => {
   const router = useRouter()
 
   const onSubmit = () => {
-    if (!name || !price || !selectedSize) {
+    if (!name || !price || !selectedSize || !description) {
       setErrors('Preencha todos os campos')
       return
     }
@@ -86,6 +88,7 @@ const CreateScreen = () => {
         name,
         price: parseFloat(price),
         size: selectedSize,
+        description,
         id: parseFloat(id),
         ...(imagePath && { image: imagePath }),
       },
@@ -103,6 +106,7 @@ const CreateScreen = () => {
         name,
         price: parseFloat(price),
         size: selectedSize,
+        description,
         ...(imagePath && { image: imagePath }),
       },
       {
@@ -192,6 +196,15 @@ const CreateScreen = () => {
           value={name}
           onChangeText={setName}
           placeholder="Margarita..."
+          style={styles.input}
+          placeholderTextColor={Colors.gray}
+        />
+
+        <Text style={styles.label}>Descrição</Text>
+        <TextInput
+          value={description}
+          onChangeText={setDescription}
+          placeholder="Pão, bife de.."
           style={styles.input}
           placeholderTextColor={Colors.gray}
         />

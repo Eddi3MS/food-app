@@ -23,10 +23,7 @@ const ProductCard = ({ product }: ProductCardPros) => {
             <Text style={styles.title} numberOfLines={1}>
               {product.name}
             </Text>
-            <Text>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Aspernatur iusto
-            </Text>
+            <Text>{product.description}</Text>
             <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
           </View>
         </Pressable>

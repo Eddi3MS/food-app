@@ -45,8 +45,9 @@ const ProductDetails = () => {
         style={styles.image}
         resizeMode="contain"
       />
-
+      <Text style={styles.text}>{product.description}</Text>
       <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+
       <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
     </ScrollView>
   )
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
   image: {
     alignSelf: 'center',
   },
+  text: { fontSize: 18, textAlign: 'center', marginVertical: 10 },
   price: {
     color: Colors.black,
     fontSize: 24,

@@ -74,6 +74,7 @@ const ProductDetails = () => {
       />
 
       <Text style={styles.title}>{product.name}</Text>
+      <Text style={styles.text}>{product.description}</Text>
       <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
     </ScrollView>
   )
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
     textAlign: 'center',
   },
+  text: { fontSize: 18, textAlign: 'center', marginVertical: 10 },
   price: {
     color: Colors.black,
     fontSize: 24,
