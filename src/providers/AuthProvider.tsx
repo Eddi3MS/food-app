@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { Tables } from '@/types'
 import { Session } from '@supabase/supabase-js'
 import {
   PropsWithChildren,
@@ -10,7 +11,7 @@ import {
 
 type AuthData = {
   session: Session | null
-  profile: any
+  profile: Tables<'profiles'> | null
   loading: boolean
   isAdmin: boolean
 }
@@ -28,6 +29,16 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const fetchProfile = async (userId: string) => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      return data
+    }
+
     const fetchSession = async () => {
       const {
         data: { session },
@@ -36,19 +47,22 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       setSession(session)
 
       if (session) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single()
-        setProfile(data || null)
+        const profile = await fetchProfile(session.user.id)
+
+        setProfile(profile)
       }
 
       setLoading(false)
     }
 
     fetchSession()
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange(async (_event, session) => {
+      let profile = null
+      if (session) {
+        const data = await fetchProfile(session.user.id)
+        profile = data
+      }
+      setProfile(profile)
       setSession(session)
     })
   }, [])

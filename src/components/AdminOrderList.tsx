@@ -22,7 +22,7 @@ export default function AdminOrdersList({
     return <CenteredFeedback text="Erro ao listar produtos." />
   }
 
-  if (!data) {
+  if (!data || (Array.isArray(data) && data.length === 0)) {
     return <CenteredFeedback text="Nenhum pedido encontrado." />
   }
 

@@ -5,10 +5,14 @@ import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
 
 export default function TabLayout() {
-  const { session } = useAuth()
+  const { session, isAdmin } = useAuth()
 
   if (!session) {
     return <Redirect href={'/sign-in'} />
+  }
+
+  if (isAdmin) {
+    return <Redirect href={'/(admin)/menu'} />
   }
 
   return (
