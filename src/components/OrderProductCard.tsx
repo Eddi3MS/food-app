@@ -1,9 +1,8 @@
 import { sizeName } from '@/utils/dictionary'
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { Tables } from '../types'
-import RemoteImage from './RemoteImage'
 
 type OrderProductCardProps = {
   item: Tables<'order_items'> & { products: Tables<'products'> }
@@ -44,9 +43,10 @@ const OrderProductCard = ({ item }: OrderProductCardProps) => {
         )}
       </View>
 
-      <RemoteImage
-        path={item.products.image}
-        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
+      <Image
+        source={{
+          uri: item.products.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+        }}
         style={styles.image}
         resizeMode="contain"
       />
@@ -68,6 +68,8 @@ const styles = StyleSheet.create({
     width: 75,
     alignSelf: 'center',
     marginRight: 10,
+    aspectRatio: 1,
+    borderRadius: 6,
   },
   title: {
     fontWeight: '500',

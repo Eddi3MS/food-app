@@ -1,12 +1,17 @@
 import Button from '@/components/Button'
 import CenteredFeedback from '@/components/CenteredFeedback'
-import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { useProduct } from '@/queries/products'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { ActivityIndicator, ScrollView, StyleSheet, Text } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native'
 
 const ProductDetails = () => {
   const { addItem } = useCart()
@@ -39,9 +44,11 @@ const ProductDetails = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
-      <RemoteImage
-        path={product.image}
-        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
+
+      <Image
+        source={{
+          uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+        }}
         style={styles.image}
         resizeMode="contain"
       />
@@ -64,6 +71,9 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: 'center',
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 6,
   },
   text: { fontSize: 18, textAlign: 'center', marginVertical: 10 },
   price: {

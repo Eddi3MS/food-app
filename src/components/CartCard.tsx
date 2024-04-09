@@ -1,10 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import { useCart } from '../providers/CartProvider'
 import { CartItem } from '../types'
 import FontAwesomeIcon from './FontAwesomeIcon'
-import RemoteImage from './RemoteImage'
 
 type CartCardProps = {
   cartItem: CartItem
@@ -15,9 +14,10 @@ const CartCard = ({ cartItem }: CartCardProps) => {
 
   return (
     <View style={styles.container}>
-      <RemoteImage
-        path={cartItem.product.image}
-        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
+      <Image
+        source={{
+          uri: cartItem.product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+        }}
         style={styles.image}
         resizeMode="contain"
       />
@@ -66,6 +66,8 @@ const styles = StyleSheet.create({
     width: 75,
     alignSelf: 'center',
     marginRight: 10,
+    aspectRatio: 1,
+    borderRadius: 6,
   },
   title: {
     fontWeight: '500',

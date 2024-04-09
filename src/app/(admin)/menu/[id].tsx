@@ -1,12 +1,12 @@
 import CenteredFeedback from '@/components/CenteredFeedback'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { useProduct } from '@/queries/products'
 import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -66,9 +66,10 @@ const ProductDetails = () => {
         }}
       />
 
-      <RemoteImage
-        path={product.image}
-        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
+      <Image
+        source={{
+          uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+        }}
         style={styles.image}
         resizeMode="contain"
       />
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     overflow: 'hidden',
     alignSelf: 'center',
+    borderRadius: 6,
   },
   title: {
     fontSize: 30,

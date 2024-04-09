@@ -1,5 +1,4 @@
 import ButtonSelection from '@/components/ButtonSelection'
-import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { supabase } from '@/lib/supabase'
 import {
@@ -18,6 +17,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -90,7 +90,9 @@ const CreateScreen = () => {
         size: selectedSize,
         description,
         id: parseFloat(id),
-        ...(imagePath && { image: imagePath }),
+        ...(imagePath && {
+          image: `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${imagePath}`,
+        }),
       },
       {
         onSuccess: () => router.back(),
@@ -107,7 +109,9 @@ const CreateScreen = () => {
         price: parseFloat(price),
         size: selectedSize,
         description,
-        ...(imagePath && { image: imagePath }),
+        ...(imagePath && {
+          image: `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${imagePath}`,
+        }),
       },
       {
         onSuccess: () => router.back(),
@@ -180,9 +184,10 @@ const CreateScreen = () => {
           }}
         />
 
-        <RemoteImage
-          path={image}
-          fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
+        <Image
+          source={{
+            uri: image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+          }}
           style={styles.image}
           resizeMode="contain"
         />
@@ -292,6 +297,8 @@ const styles = StyleSheet.create({
   image: {
     width: '50%',
     alignSelf: 'center',
+    aspectRatio: 1,
+    borderRadius: 6,
   },
   textButton: {
     alignSelf: 'center',
