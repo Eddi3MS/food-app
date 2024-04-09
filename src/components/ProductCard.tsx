@@ -1,6 +1,6 @@
 import { Tables } from '@/types'
 import { Link, useSegments } from 'expo-router'
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors'
 import RemoteImage from './RemoteImage'
 
@@ -10,24 +10,25 @@ const ProductCard = ({ product }: ProductCardPros) => {
   const segments = useSegments<['(admin)', 'menu'] | ['(user)', 'menu']>()
 
   return (
-    <View
-      style={[
-        styles.container,
-        /* container: padding 10 gap 10 => 10 + gap / 2 = 15 ) */
-        { maxWidth: Dimensions.get('window').width / 2 - 15 },
-      ]}
-    >
+    <View style={[styles.container]}>
       <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
         <Pressable style={styles.Pressable}>
           <RemoteImage
             path={product.image}
             fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
             resizeMode="contain"
+            style={styles.image}
           />
-          <Text style={styles.title} numberOfLines={1}>
-            {product.name}
-          </Text>
-          <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+          <View style={styles.info}>
+            <Text style={styles.title} numberOfLines={1}>
+              {product.name}
+            </Text>
+            <Text>
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+              Aspernatur iusto
+            </Text>
+            <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
+          </View>
         </Pressable>
       </Link>
     </View>
@@ -40,16 +41,20 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     flex: 1,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   Pressable: {
+    flexDirection: 'row-reverse',
     padding: 10,
     flex: 1,
   },
+  image: {
+    maxWidth: 90,
+  },
+  info: { flex: 1, justifyContent: 'space-between' },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    marginVertical: 10,
   },
   price: {
     color: Colors.primary,

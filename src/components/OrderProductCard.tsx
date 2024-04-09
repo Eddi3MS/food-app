@@ -23,7 +23,7 @@ const OrderProductCard = ({ item }: OrderProductCardProps) => {
           <Text style={styles.title}>
             {item.quantity}x - {item.products.name}
           </Text>
-          <Text style={styles.title}>{sizeName(item.size)}</Text>
+          <Text style={styles.title}>{sizeName(item.products.size)}</Text>
         </View>
 
         <View style={styles.subtitleContainer}>

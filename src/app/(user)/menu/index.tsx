@@ -2,7 +2,7 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import Colors from '@/constants/Colors'
 import { useProductList } from '@/queries/products'
 import ProductCard from '@components/ProductCard'
-import { ActivityIndicator, FlatList, Text } from 'react-native'
+import { ActivityIndicator, SectionList, Text } from 'react-native'
 
 export default function ProductsList() {
   const { data, error, isLoading } = useProductList()
@@ -20,13 +20,28 @@ export default function ProductsList() {
   }
 
   return (
-    <FlatList
-      data={data}
+    <SectionList
       keyExtractor={(item) => String(item.id)}
-      renderItem={(itemData) => <ProductCard product={itemData.item} />}
-      numColumns={2}
-      contentContainerStyle={{ gap: 10, padding: 10 }}
-      columnWrapperStyle={{ gap: 10 }}
+      renderItem={({ item }) => <ProductCard product={item} />}
+      contentContainerStyle={{
+        gap: 10,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+      }}
+      sections={data}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text
+          style={{
+            fontSize: 22,
+            color: Colors.primary,
+            fontWeight: '600',
+            marginTop: 15,
+            marginBottom: 5,
+          }}
+        >
+          {title}
+        </Text>
+      )}
     />
   )
 }

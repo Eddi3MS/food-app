@@ -1,3 +1,4 @@
+import ButtonSelection from '@/components/ButtonSelection'
 import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { supabase } from '@/lib/supabase'
@@ -7,7 +8,7 @@ import {
   useProduct,
   useUpdateProduct,
 } from '@/queries/products'
-import { Tables } from '@/types'
+import { Enums } from '@/types'
 import Button from '@components/Button'
 import { decode } from 'base64-arraybuffer'
 import { randomUUID } from 'expo-crypto'
@@ -18,16 +19,20 @@ import React, { useEffect, useState } from 'react'
 import {
   Alert,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native'
 
+const sizes: Enums<'sizes'>[] = ['P', 'M', 'G', 'GG']
+
 const CreateScreen = () => {
   const [image, setImage] = useState<string | null>(null)
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
+  const [selectedSize, setSelectedSize] = useState<Enums<'sizes'>>(sizes[0])
   const [errors, setErrors] = useState('')
   const [loading, setLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -43,6 +48,7 @@ const CreateScreen = () => {
     setName(updatingProduct.name)
     setPrice(updatingProduct.price.toFixed(2))
     setImage(updatingProduct.image)
+    setSelectedSize(updatingProduct.size)
   }, [])
 
   const { mutate: handleCreateProduct } = useInsertProduct()
@@ -52,7 +58,7 @@ const CreateScreen = () => {
   const router = useRouter()
 
   const onSubmit = () => {
-    if (!name || !price) {
+    if (!name || !price || !selectedSize) {
       setErrors('Preencha todos os campos')
       return
     }
@@ -75,36 +81,34 @@ const CreateScreen = () => {
 
     const imagePath = await uploadImage()
 
-    const updatedProduct: Partial<Tables<'products'>> = {
-      name,
-      price: parseFloat(price),
-      id: +id,
-    }
-
-    if (imagePath) {
-      updatedProduct.image = imagePath
-    }
-
-    handleUpdateProduct(updatedProduct, {
-      onSuccess: () => router.back(),
-    })
+    handleUpdateProduct(
+      {
+        name,
+        price: parseFloat(price),
+        size: selectedSize,
+        id: parseFloat(id),
+        ...(imagePath && { image: imagePath }),
+      },
+      {
+        onSuccess: () => router.back(),
+      }
+    )
   }
 
   const onCreate = async () => {
     const imagePath = await uploadImage()
 
-    const newProduct: Partial<Tables<'products'>> = {
-      name,
-      price: parseFloat(price),
-    }
-
-    if (imagePath) {
-      newProduct.image = imagePath
-    }
-
-    handleCreateProduct(newProduct, {
-      onSuccess: () => router.back(),
-    })
+    handleCreateProduct(
+      {
+        name,
+        price: parseFloat(price),
+        size: selectedSize,
+        ...(imagePath && { image: imagePath }),
+      },
+      {
+        onSuccess: () => router.back(),
+      }
+    )
   }
 
   const onDelete = () => {
@@ -165,68 +169,112 @@ const CreateScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: isUpdating ? 'Atualizar produto' : 'Adicionar produto',
-        }}
-      />
+      <ScrollView>
+        <Stack.Screen
+          options={{
+            title: isUpdating ? 'Atualizar produto' : 'Adicionar produto',
+          }}
+        />
 
-      <RemoteImage
-        path={image}
-        fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
-        style={styles.image}
-        resizeMode="contain"
-      />
+        <RemoteImage
+          path={image}
+          fallback={process.env.EXPO_PUBLIC_DEFAULT_IMAGE!}
+          style={styles.image}
+          resizeMode="contain"
+        />
 
-      <Text onPress={pickImage} style={styles.textButton}>
-        Select Image
-      </Text>
+        <Text onPress={pickImage} style={styles.textButton}>
+          Selecione uma imagem
+        </Text>
 
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder="Margarita..."
-        style={styles.input}
-        placeholderTextColor={Colors.gray}
-      />
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          placeholder="Margarita..."
+          style={styles.input}
+          placeholderTextColor={Colors.gray}
+        />
 
-      <Text style={styles.label}>Price ($)</Text>
-      <TextInput
-        value={price}
-        onChangeText={setPrice}
-        placeholder="9.99"
-        style={styles.input}
-        keyboardType="numeric"
-        placeholderTextColor={Colors.gray}
-      />
-      <Text style={styles.error}>{errors}</Text>
-      <Button
-        onPress={onSubmit}
-        text={
-          isUpdating && loading
-            ? 'Atualizando..'
-            : isUpdating
-            ? 'Atualizar'
-            : loading
-            ? 'Adicionando..'
-            : 'Adicionar'
-        }
-        disabled={loading}
-      />
-      {isUpdating && (
-        <Pressable onPress={confirmDelete} disabled={deleteLoading}>
-          <Text style={styles.deleteButton}>
-            {deleteLoading ? 'Deletando..' : 'Deletar'}
-          </Text>
-        </Pressable>
-      )}
+        <Text style={styles.label}>Price ($)</Text>
+        <TextInput
+          value={price}
+          onChangeText={setPrice}
+          placeholder="9.99"
+          style={styles.input}
+          keyboardType="numeric"
+          placeholderTextColor={Colors.gray}
+        />
+
+        <ButtonSelection
+          options={sizes}
+          keyExtractor={(size) => size}
+          title={<Text style={styles.label}>Tamanho:</Text>}
+          optionsContainerClasses={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginVertical: 10,
+          }}
+        >
+          {(size) => (
+            <Pressable
+              onPress={() => {
+                setSelectedSize(size)
+              }}
+              style={[
+                styles.size,
+                {
+                  backgroundColor:
+                    selectedSize === size ? Colors.gray : '#00000005',
+                },
+              ]}
+              key={size}
+            >
+              <Text
+                style={[
+                  styles.sizeText,
+                  {
+                    color: selectedSize === size ? Colors.black : Colors.gray,
+                  },
+                ]}
+              >
+                {size}
+              </Text>
+            </Pressable>
+          )}
+        </ButtonSelection>
+        <Text style={styles.error}>{errors}</Text>
+        <View style={{ marginTop: 'auto' }}>
+          <Button
+            onPress={onSubmit}
+            text={
+              isUpdating && loading
+                ? 'Atualizando..'
+                : isUpdating
+                ? 'Atualizar'
+                : loading
+                ? 'Adicionando..'
+                : 'Adicionar'
+            }
+            disabled={loading}
+          />
+        </View>
+
+        {isUpdating && (
+          <Pressable onPress={confirmDelete} disabled={deleteLoading}>
+            <Text style={styles.deleteButton}>
+              {deleteLoading ? 'Deletando..' : 'Deletar'}
+            </Text>
+          </Pressable>
+        )}
+      </ScrollView>
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    flex: 1,
   },
   image: {
     width: '50%',
@@ -262,6 +310,23 @@ const styles = StyleSheet.create({
   error: {
     color: Colors.red,
     textAlign: 'center',
+  },
+  sizeTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginTop: 10,
+    color: Colors.black,
+  },
+  size: {
+    width: 50,
+    aspectRatio: 1,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sizeText: {
+    fontSize: 20,
+    fontWeight: '500',
   },
 })
 

@@ -6,7 +6,7 @@ import { router } from 'expo-router'
 
 type CartType = {
   items: CartItem[]
-  addItem: (product: Tables<'products'>, size: CartItem['size']) => void
+  addItem: (product: Tables<'products'>) => void
   updateQuantity: (itemId: string, amount: 1 | -1) => void
   total: number
   checkout: () => void
@@ -38,10 +38,8 @@ export default function CartProvider({ children }: PropsWithChildren) {
     setItems([])
   }
 
-  const addItem = (product: Tables<'products'>, size: CartItem['size']) => {
-    const existingItem = items.find(
-      (item) => item.product.id === product.id && item.size === size
-    )
+  const addItem = (product: Tables<'products'>) => {
+    const existingItem = items.find((item) => item.product.id === product.id)
     if (existingItem) {
       updateQuantity(existingItem.id, 1)
       return
@@ -50,7 +48,6 @@ export default function CartProvider({ children }: PropsWithChildren) {
     const newCartItem = {
       id: randomUUID(),
       product,
-      size,
       quantity: 1,
     }
 
@@ -83,7 +80,6 @@ export default function CartProvider({ children }: PropsWithChildren) {
       order_id: order.id,
       product_id: cartItem.product.id,
       quantity: cartItem.quantity,
-      size: cartItem.size,
     }))
 
     handleInsertOrderItems(orderItems, {

@@ -28,7 +28,7 @@ const CartCard = ({ cartItem }: CartCardProps) => {
           <Text style={styles.price}>
             R$ {cartItem.product.price.toFixed(2)}
           </Text>
-          <Text>Tamanho: {cartItem.size}</Text>
+          <Text>Tamanho: {cartItem.product.size}</Text>
         </View>
       </View>
       <View style={styles.quantitySelector}>

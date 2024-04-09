@@ -1,32 +1,14 @@
 import Button from '@/components/Button'
-import ButtonSelection from '@/components/ButtonSelection'
 import CenteredFeedback from '@/components/CenteredFeedback'
 import RemoteImage from '@/components/RemoteImage'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { useProduct } from '@/queries/products'
-import { Enums } from '@/types'
 import { Stack, useLocalSearchParams } from 'expo-router'
-import React, { useState } from 'react'
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-} from 'react-native'
-
-const sizes: Enums<'sizes'>[] = ['P', 'M', 'G', 'GG']
-
-const valueMultiplier = {
-  P: 1,
-  M: 1.5,
-  G: 2,
-  GG: 2.5,
-}
+import React from 'react'
+import { ActivityIndicator, ScrollView, StyleSheet, Text } from 'react-native'
 
 const ProductDetails = () => {
-  const [selectedSize, setSelectedSize] = useState<Enums<'sizes'>>(sizes[0])
   const { addItem } = useCart()
 
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -51,7 +33,7 @@ const ProductDetails = () => {
   }
 
   const handleAddItemToCart = () => {
-    addItem(product, selectedSize)
+    addItem(product)
   }
 
   return (
@@ -64,47 +46,7 @@ const ProductDetails = () => {
         resizeMode="contain"
       />
 
-      <ButtonSelection
-        options={sizes}
-        keyExtractor={(size) => size}
-        title={<Text style={styles.title}>Escolha o tamanho:</Text>}
-        optionsContainerClasses={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          marginVertical: 10,
-        }}
-      >
-        {(size) => (
-          <Pressable
-            onPress={() => {
-              setSelectedSize(size)
-            }}
-            style={[
-              styles.size,
-              {
-                backgroundColor:
-                  selectedSize === size ? Colors.gray : '#00000005',
-              },
-            ]}
-            key={size}
-          >
-            <Text
-              style={[
-                styles.sizeText,
-                {
-                  color: selectedSize === size ? Colors.black : Colors.gray,
-                },
-              ]}
-            >
-              {size}
-            </Text>
-          </Pressable>
-        )}
-      </ButtonSelection>
-
-      <Text style={styles.price}>
-        R$ {(product.price * valueMultiplier[selectedSize]).toFixed(2)}
-      </Text>
+      <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
       <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
     </ScrollView>
   )
@@ -122,28 +64,11 @@ const styles = StyleSheet.create({
   image: {
     alignSelf: 'center',
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 10,
-    color: Colors.black,
-  },
   price: {
     color: Colors.black,
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 'auto',
     textAlign: 'center',
-  },
-  size: {
-    width: 50,
-    aspectRatio: 1,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sizeText: {
-    fontSize: 20,
-    fontWeight: '500',
   },
 })

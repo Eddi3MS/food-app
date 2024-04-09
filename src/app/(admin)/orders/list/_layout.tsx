@@ -16,6 +16,7 @@ const ListLayout = () => {
         screenOptions={{
           tabBarActiveTintColor: Colors.primary,
           tabBarInactiveTintColor: Colors.gray,
+          tabBarAndroidRipple: { color: Colors.gray, borderless: true },
 
           tabBarIndicatorStyle: {
             backgroundColor: Colors.primary,

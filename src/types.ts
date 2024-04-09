@@ -15,7 +15,6 @@ export type Enums<T extends keyof Database['public']['Enums']> =
 export type CartItem = {
   id: string
   product: Tables<'products'>
-  size: Enums<'sizes'>
   quantity: number
 }
 

@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Tables, InsertTables, UpdateTables } from '@/types'
+import { sizeName } from '@/utils/dictionary'
 
 export const useProductList = () => {
   return useQuery({
@@ -10,7 +12,24 @@ export const useProductList = () => {
       if (error) {
         throw new Error(error.message)
       }
-      return data
+
+      const formattedData = data.reduce(
+        (acc: { title: string; data: Tables<'products'>[] }[], att) => {
+          const title = `Pizza ${sizeName(att.size)}`
+          const existingObject = acc.find((item) => item.title === title)
+
+          if (existingObject) {
+            existingObject.data.push(att)
+          } else {
+            acc.push({ title, data: [att] })
+          }
+
+          return acc
+        },
+        []
+      )
+
+      return formattedData
     },
   })
 }
@@ -37,14 +56,10 @@ export const useInsertProduct = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    async mutationFn(data: any) {
+    async mutationFn(data: InsertTables<'products'>) {
       const { error, data: newProduct } = await supabase
         .from('products')
-        .insert({
-          name: data.name,
-          image: data.image,
-          price: data.price,
-        })
+        .insert(data)
         .single()
 
       if (error) {
@@ -62,15 +77,14 @@ export const useUpdateProduct = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    async mutationFn(data: any) {
+    async mutationFn({
+      id,
+      ...data
+    }: UpdateTables<'products'> & { id: number }) {
       const { error, data: updatedProduct } = await supabase
         .from('products')
-        .update({
-          name: data.name,
-          image: data.image,
-          price: data.price,
-        })
-        .eq('id', data.id)
+        .update(data)
+        .eq('id', id)
         .select()
         .single()
 

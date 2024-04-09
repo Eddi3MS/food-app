@@ -16,7 +16,6 @@ export type Database = {
           order_id: number
           product_id: number
           quantity: number
-          size: Database["public"]["Enums"]["sizes"]
         }
         Insert: {
           created_at?: string
@@ -24,7 +23,6 @@ export type Database = {
           order_id: number
           product_id: number
           quantity?: number
-          size?: Database["public"]["Enums"]["sizes"]
         }
         Update: {
           created_at?: string
@@ -32,7 +30,6 @@ export type Database = {
           order_id?: number
           product_id?: number
           quantity?: number
-          size?: Database["public"]["Enums"]["sizes"]
         }
         Relationships: [
           {
@@ -90,6 +87,7 @@ export type Database = {
           image: string | null
           name: string
           price: number
+          size: Database["public"]["Enums"]["sizes"]
         }
         Insert: {
           created_at?: string
@@ -97,6 +95,7 @@ export type Database = {
           image?: string | null
           name: string
           price: number
+          size?: Database["public"]["Enums"]["sizes"]
         }
         Update: {
           created_at?: string
@@ -104,6 +103,7 @@ export type Database = {
           image?: string | null
           name?: string
           price?: number
+          size?: Database["public"]["Enums"]["sizes"]
         }
         Relationships: []
       }
