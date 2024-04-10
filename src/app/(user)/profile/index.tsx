@@ -16,13 +16,13 @@ const Profile = () => {
   if (!Array.isArray(profile?.address) || profile.address.length <= 0) {
     return (
       <View style={styles.container}>
-        <View>
-          <Text style={styles.title}>
+        <View style={styles.addressContainer}>
+          <Text style={styles.text}>
             Você ainda não cadastrou um endereço de entrega.
           </Text>
           <Text style={styles.text}>Deseja fazer isso agora?</Text>
 
-          <Button text="Cadastrar Endereço" onPress={handleNavigateToAddress} />
+          <Button text="Ir para cadastro" onPress={handleNavigateToAddress} />
         </View>
       </View>
     )

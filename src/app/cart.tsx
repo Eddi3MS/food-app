@@ -1,13 +1,38 @@
 import Button from '@/components/Button'
 import CartCard from '@/components/CartCard'
 import EmptyCartCard from '@/components/EmptyCartCard'
+import { useAuth } from '@/providers/AuthProvider'
 import { useCart } from '@/providers/CartProvider'
 import { formatCurrency } from '@/utils/formatCurrency'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Platform, StyleSheet, Text, View } from 'react-native'
 
 const CartScreen = () => {
   const { items, total, checkout, loading } = useCart()
+  const { profile } = useAuth()
+
+  const handleCheckout = () => {
+    if (!Array.isArray(profile?.address) || profile.address.length <= 0) {
+      return Alert.alert(
+        'Atenção!!',
+        'Vincule um endereço ao seu perfil antes de finalizar o pedido.',
+        [
+          {
+            text: 'Cancelar',
+            style: 'destructive',
+          },
+          {
+            text: 'Ir para cadastro',
+            style: 'default',
+            onPress: () => router.push('/(user)/profile/address'),
+          },
+        ]
+      )
+    }
+
+    checkout()
+  }
 
   if (items.length === 0) {
     return <EmptyCartCard />
@@ -23,7 +48,7 @@ const CartScreen = () => {
 
       <Text style={styles.totalText}>Total: {formatCurrency(total)}</Text>
       <Button
-        onPress={checkout}
+        onPress={handleCheckout}
         text={loading ? 'Finalizando..' : 'Finalizar'}
         disabled={loading}
       />
