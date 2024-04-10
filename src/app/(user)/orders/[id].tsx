@@ -2,15 +2,16 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import OrderListCard from '@/components/OrderListCard'
 import OrderProductCard from '@/components/OrderProductCard'
 import Colors from '@/constants/Colors'
-import { useOrderDetails } from '@/queries/orders'
+import { useUserOrderDetails } from '@/queries/orders'
 import { useUpdateOrderSubscription } from '@/queries/subscriptions'
+import { formatCurrency } from '@/utils/formatCurrency'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 
 export default function OrderDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
 
-  const { data, error, isLoading } = useOrderDetails(+id)
+  const { data, error, isLoading } = useUserOrderDetails(+id)
   useUpdateOrderSubscription(+id)
 
   if (isLoading) {
@@ -63,7 +64,7 @@ export default function OrderDetailsScreen() {
       >
         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Total:</Text>
         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-          R${data.total.toFixed(2)}
+          {formatCurrency(data.total)}
         </Text>
       </View>
     </View>
