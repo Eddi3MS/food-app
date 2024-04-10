@@ -1,10 +1,8 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
 import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
-import { Pressable } from 'react-native'
 
 export default function TabLayout() {
   const { session, isAdmin } = useAuth()
@@ -47,25 +45,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          headerShown: false,
           title: 'Perfil',
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon name="user" color={color} />
-          ),
-          headerRight: () => (
-            <Pressable
-              onPress={() => {
-                supabase.auth.signOut()
-              }}
-            >
-              {({ pressed }) => (
-                <FontAwesomeIcon
-                  name="sign-out"
-                  size={20}
-                  color={Colors.gray}
-                  style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                />
-              )}
-            </Pressable>
           ),
         }}
       />

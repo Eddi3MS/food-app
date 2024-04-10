@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      address: {
+        Row: {
+          complement: string | null
+          created_at: string
+          district: string
+          id: number
+          number: string
+          street: string
+          user_id: string
+        }
+        Insert: {
+          complement?: string | null
+          created_at?: string
+          district: string
+          id?: number
+          number: string
+          street: string
+          user_id: string
+        }
+        Update: {
+          complement?: string | null
+          created_at?: string
+          district?: string
+          id?: number
+          number?: string
+          street?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_address_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string

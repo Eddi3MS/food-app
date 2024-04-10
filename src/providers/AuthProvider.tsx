@@ -4,6 +4,7 @@ import { Session } from '@supabase/supabase-js'
 import {
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -11,9 +12,10 @@ import {
 
 type AuthData = {
   session: Session | null
-  profile: Tables<'profiles'> | null
+  profile: (Tables<'profiles'> & { address: Tables<'address'>[] | null }) | null
   loading: boolean
   isAdmin: boolean
+  updateProfile: (data: Tables<'address'>) => void
 }
 
 const AuthContext = createContext<AuthData>({
@@ -21,6 +23,7 @@ const AuthContext = createContext<AuthData>({
   loading: true,
   profile: null,
   isAdmin: false,
+  updateProfile: () => {},
 })
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -28,11 +31,18 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [profile, setProfile] = useState<AuthData['profile']>(null)
   const [loading, setLoading] = useState(true)
 
+  const updateProfile = useCallback(async (data: Tables<'address'>) => {
+    setProfile((curr) => {
+      if (!curr) return null
+      return { ...curr, address: [data] }
+    })
+  }, [])
+
   useEffect(() => {
     const fetchProfile = async (userId: string) => {
       const { data } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, address(*)')
         .eq('id', userId)
         .single()
 
@@ -74,6 +84,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         loading,
         profile,
         isAdmin: profile?.role === 'ADMIN',
+        updateProfile,
       }}
     >
       {children}
