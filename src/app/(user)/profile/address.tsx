@@ -2,21 +2,12 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
+import { AddressFormType, AddressSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from 'expo-router'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { z } from 'zod'
-
-const AddressSchema = z.object({
-  street: z.string().min(1, 'Campo Obrigatório'),
-  number: z.string().min(1, 'Campo Obrigatório'),
-  district: z.string().min(1, 'Campo Obrigatório'),
-  complement: z.string().optional(),
-})
-
-type AddressFormType = z.infer<typeof AddressSchema>
 
 function returnStringValue(field?: string | null): string {
   if (!field || typeof field !== 'string') {

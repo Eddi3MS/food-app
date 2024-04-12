@@ -16,7 +16,14 @@ const Profile = () => {
   if (!Array.isArray(profile?.address) || profile.address.length <= 0) {
     return (
       <View style={styles.container}>
-        <View style={styles.addressContainer}>
+        {profile?.full_name && (
+          <View style={styles.innerContainer}>
+            <Text style={styles.text}>
+              <Text style={styles.label}>Usuário:</Text> {profile.full_name}.
+            </Text>
+          </View>
+        )}
+        <View style={styles.innerContainer}>
           <Text style={styles.text}>
             Você ainda não cadastrou um endereço de entrega.
           </Text>
@@ -32,8 +39,15 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+      {profile?.full_name && (
+        <View style={styles.innerContainer}>
+          <Text style={styles.text}>
+            <Text style={styles.label}>Usuário:</Text> {profile.full_name}.
+          </Text>
+        </View>
+      )}
       <Text style={styles.title}>Endereço para entrega:</Text>
-      <View style={styles.addressContainer}>
+      <View style={styles.innerContainer}>
         <Text style={styles.text}>
           <Text style={styles.label}>Rua:</Text> {street}, num {number}.
         </Text>
@@ -58,7 +72,7 @@ export default Profile
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, gap: 10 },
   title: { fontSize: 20, fontWeight: '600' },
-  addressContainer: {
+  innerContainer: {
     backgroundColor: Colors.white,
     padding: 10,
     borderRadius: 6,

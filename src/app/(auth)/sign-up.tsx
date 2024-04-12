@@ -1,22 +1,38 @@
+import Input from '@/components/Input'
+import { supabase } from '@/lib/supabase'
+import { RegisterFormType, RegisterSchema } from '@/schemas'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from 'expo-router'
-import React, { useState } from 'react'
-import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Alert, StyleSheet, View } from 'react-native'
 import Button from '../../components/Button'
 import Colors from '../../constants/Colors'
-import { supabase } from '@/lib/supabase'
 
 const SignUpScreen = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const {
+    control,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+  } = useForm({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      password: '',
+      email: '',
+      name: '',
+    },
+  })
 
-  const handleSignUp = async () => {
-    if (!password || !email) {
-      return Alert.alert('Atenção!!', 'Preencha todos os campos.')
-    }
-
-    setLoading(true)
-    const { error } = await supabase.auth.signUp({ email, password })
+  const handleSignUp = async (data: RegisterFormType) => {
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          full_name: data.name,
+        },
+      },
+    })
 
     if (error) {
       let message = error.message
@@ -31,35 +47,56 @@ const SignUpScreen = () => {
 
       Alert.alert('Algo deu errado!!', message)
     }
-
-    setLoading(false)
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>E-mail</Text>
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="jon@gmail.com"
-        style={styles.input}
-        placeholderTextColor={Colors.gray}
+      <Controller
+        control={control}
+        name="name"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            value={value}
+            onChangeText={onChange}
+            placeholder="João da Silva"
+            label={'Nome'}
+            error={errors.name?.message}
+          />
+        )}
       />
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder=""
-        style={styles.input}
-        placeholderTextColor={Colors.gray}
-        secureTextEntry
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            value={value}
+            onChangeText={onChange}
+            placeholder="joão@gmail.com"
+            label={'E-mail'}
+            error={errors.email?.message}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            value={value}
+            onChangeText={onChange}
+            placeholder="******"
+            label={'Senha'}
+            error={errors.password?.message}
+          />
+        )}
       />
 
       <Button
-        text={loading ? 'Carregando..' : 'Criar Conta'}
-        onPress={handleSignUp}
-        disabled={loading}
+        text={isSubmitting ? 'Criando..' : 'Criar Conta'}
+        onPress={handleSubmit(handleSignUp)}
+        disabled={isSubmitting}
       />
       <Link href="/sign-in" style={styles.textButton}>
         Entrar

@@ -25,7 +25,7 @@ export default Input
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
     position: 'relative',
   },
   label: {

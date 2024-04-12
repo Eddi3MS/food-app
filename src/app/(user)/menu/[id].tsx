@@ -24,7 +24,7 @@ const ProductDetails = () => {
     return (
       <>
         <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
-        <Stack.Screen options={{ title: 'Carregando..' }} />
+        <Stack.Screen options={{ headerShown: false }} />
       </>
     )
   }

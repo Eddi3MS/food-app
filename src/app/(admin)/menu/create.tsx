@@ -1,4 +1,5 @@
 import ButtonSelection from '@/components/ButtonSelection'
+import Input from '@/components/Input'
 import Colors from '@/constants/Colors'
 import { supabase } from '@/lib/supabase'
 import {
@@ -7,14 +8,18 @@ import {
   useProduct,
   useUpdateProduct,
 } from '@/queries/products'
+import { ProductFormType, ProductSchema } from '@/schemas'
 import { Enums } from '@/types'
+import { formatCurrency } from '@/utils/formatCurrency'
 import Button from '@components/Button'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { decode } from 'base64-arraybuffer'
 import { randomUUID } from 'expo-crypto'
 import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import {
   Alert,
   Image,
@@ -22,21 +27,33 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native'
 
 const sizes: Enums<'sizes'>[] = ['P', 'M', 'G', 'GG']
 
 const CreateScreen = () => {
-  const [image, setImage] = useState<string | null>(null)
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState('')
-  const [description, setDescription] = useState('')
-  const [selectedSize, setSelectedSize] = useState<Enums<'sizes'>>(sizes[0])
-  const [errors, setErrors] = useState('')
-  const [loading, setLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+    watch,
+  } = useForm({
+    resolver: zodResolver(ProductSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      size: sizes[0],
+      price: '',
+      image: '',
+    },
+  })
+
+  const image = watch('image')
 
   const { id } = useLocalSearchParams<{ id?: string }>()
 
@@ -46,11 +63,11 @@ const CreateScreen = () => {
   useEffect(() => {
     if (!updatingProduct) return
 
-    setName(updatingProduct.name)
-    setPrice(updatingProduct.price.toFixed(2))
-    setImage(updatingProduct.image)
-    setSelectedSize(updatingProduct.size)
-    setDescription(updatingProduct.description)
+    setValue('name', updatingProduct.name)
+    setValue('price', String(updatingProduct.price))
+    setValue('image', updatingProduct.image ? updatingProduct.image : '')
+    setValue('size', updatingProduct.size)
+    setValue('description', updatingProduct.description)
   }, [])
 
   const { mutate: handleCreateProduct } = useInsertProduct()
@@ -59,64 +76,83 @@ const CreateScreen = () => {
 
   const router = useRouter()
 
-  const onSubmit = () => {
-    if (!name || !price || !selectedSize || !description) {
-      setErrors('Preencha todos os campos')
+  const uploadImage = async (image?: string) => {
+    if (!image || !image?.startsWith('file://')) {
       return
     }
 
-    if (isNaN(parseFloat(price))) {
-      setErrors('Preço deve ser um número.')
-      return
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    })
+
+    const filePath = `${randomUUID()}.png`
+    const contentType = 'image/png'
+
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, decode(base64), { contentType })
+
+    if (error) {
+      throw new Error('Falha no upload da image.')
     }
+
+    if (data) {
+      return data.path
+    }
+  }
+
+  const onSubmit = async (data: ProductFormType) => {
     setLoading(true)
+    const { image, name, description, size, price } = data
 
-    if (isUpdating) {
-      onUpdate()
-    } else {
-      onCreate()
+    const parsedPriceInCents = parseFloat(price.replace(',', ''))
+
+    const productData = {
+      name,
+      price: parsedPriceInCents,
+      size,
+      description,
     }
-  }
 
-  const onUpdate = async () => {
-    if (!id) return
+    try {
+      const imagePath = await uploadImage(image)
 
-    const imagePath = await uploadImage()
-
-    handleUpdateProduct(
-      {
-        name,
-        price: parseFloat(price),
-        size: selectedSize,
-        description,
-        id: parseFloat(id),
-        ...(imagePath && {
-          image: `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${imagePath}`,
-        }),
-      },
-      {
-        onSuccess: () => router.back(),
+      if (isUpdating) {
+        handleUpdateProduct(
+          {
+            ...productData,
+            id: parseFloat(id),
+            ...(imagePath && {
+              image: `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${imagePath}`,
+            }),
+          },
+          {
+            onSuccess: () => router.back(),
+            onSettled: () => setLoading(false),
+            onError: (e) => Alert.alert('Algo deu errado', e.message),
+          }
+        )
+      } else {
+        handleCreateProduct(
+          {
+            ...productData,
+            ...(imagePath && {
+              image: `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${imagePath}`,
+            }),
+          },
+          {
+            onSuccess: () => router.back(),
+            onSettled: () => setLoading(false),
+            onError: (e) => Alert.alert('Algo deu errado', e.message),
+          }
+        )
       }
-    )
-  }
-
-  const onCreate = async () => {
-    const imagePath = await uploadImage()
-
-    handleCreateProduct(
-      {
-        name,
-        price: parseFloat(price),
-        size: selectedSize,
-        description,
-        ...(imagePath && {
-          image: `${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${imagePath}`,
-        }),
-      },
-      {
-        onSuccess: () => router.back(),
+    } catch (error) {
+      console.error(error)
+      if (error instanceof Error) {
+        Alert.alert('Algo deu errado.', error.message)
       }
-    )
+    }
   }
 
   const onDelete = () => {
@@ -124,6 +160,7 @@ const CreateScreen = () => {
 
     handleDeleteProduct(+id, {
       onSuccess: () => router.replace('/(admin)/menu'),
+      onError: (e) => Alert.alert('Erro ao deletar produto!!', e.message),
     })
   }
 
@@ -150,28 +187,7 @@ const CreateScreen = () => {
     })
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
-    }
-  }
-
-  const uploadImage = async () => {
-    if (!image?.startsWith('file://')) {
-      return
-    }
-
-    const base64 = await FileSystem.readAsStringAsync(image, {
-      encoding: 'base64',
-    })
-
-    const filePath = `${randomUUID()}.png`
-    const contentType = 'image/png'
-
-    const { data, error } = await supabase.storage
-      .from('product-images')
-      .upload(filePath, decode(base64), { contentType })
-
-    if (data) {
-      return data.path
+      setValue('image', result.assets[0].uri)
     }
   }
 
@@ -184,87 +200,112 @@ const CreateScreen = () => {
           }}
         />
 
-        <Image
-          source={{
-            uri: image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
-          }}
-          style={styles.image}
-          resizeMode="contain"
-        />
+        <Pressable onPress={pickImage}>
+          <Image
+            source={{
+              uri: image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+            }}
+            style={styles.image}
+            resizeMode="contain"
+          />
 
-        <Text onPress={pickImage} style={styles.textButton}>
-          Selecione uma imagem
-        </Text>
+          <Text style={styles.textButton}>Selecione uma imagem</Text>
+        </Pressable>
 
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          value={name}
-          onChangeText={setName}
-          placeholder="Margarita..."
-          style={styles.input}
-          placeholderTextColor={Colors.gray}
-        />
-
-        <Text style={styles.label}>Descrição</Text>
-        <TextInput
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Pão, bife de.."
-          style={styles.input}
-          placeholderTextColor={Colors.gray}
-        />
-
-        <Text style={styles.label}>Price ($)</Text>
-        <TextInput
-          value={price}
-          onChangeText={setPrice}
-          placeholder="9.99"
-          style={styles.input}
-          keyboardType="numeric"
-          placeholderTextColor={Colors.gray}
-        />
-
-        <ButtonSelection
-          options={sizes}
-          keyExtractor={(size) => size}
-          title={<Text style={styles.label}>Tamanho:</Text>}
-          optionsContainerClasses={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginVertical: 10,
-          }}
-        >
-          {(size) => (
-            <Pressable
-              onPress={() => {
-                setSelectedSize(size)
-              }}
-              style={[
-                styles.size,
-                {
-                  backgroundColor:
-                    selectedSize === size ? Colors.gray : '#00000005',
-                },
-              ]}
-              key={size}
-            >
-              <Text
-                style={[
-                  styles.sizeText,
-                  {
-                    color: selectedSize === size ? Colors.black : Colors.gray,
-                  },
-                ]}
-              >
-                {size}
-              </Text>
-            </Pressable>
+        <Controller
+          control={control}
+          name="name"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              value={value}
+              onChangeText={onChange}
+              placeholder="Portuguesa"
+              label={'Nome'}
+              error={errors.name?.message}
+            />
           )}
-        </ButtonSelection>
-        <Text style={styles.error}>{errors}</Text>
+        />
+
+        <Controller
+          control={control}
+          name="description"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              value={value}
+              onChangeText={onChange}
+              placeholder="Massa fina, presunto, tom.."
+              label={'Descrição'}
+              error={errors.description?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="price"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              value={formatCurrency(value)}
+              onChangeText={(text) => {
+                const sanitizedText = text.replace(/[^0-9,]/g, '')
+
+                onChange(sanitizedText)
+              }}
+              placeholder="R$35,50"
+              label={'Preço'}
+              error={errors.price?.message}
+              keyboardType="numeric"
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="size"
+          render={({ field: { onChange, value } }) => (
+            <ButtonSelection
+              options={sizes}
+              keyExtractor={(size) => size}
+              title={<Text style={styles.label}>Tamanho:</Text>}
+              optionsContainerClasses={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                marginVertical: 10,
+              }}
+            >
+              {(size) => (
+                <Pressable
+                  onPress={() => {
+                    onChange(size)
+                  }}
+                  style={[
+                    styles.size,
+                    {
+                      backgroundColor:
+                        value === size ? Colors.gray : '#00000005',
+                    },
+                  ]}
+                  key={size}
+                >
+                  <Text
+                    style={[
+                      styles.sizeText,
+                      {
+                        color: value === size ? Colors.black : Colors.gray,
+                      },
+                    ]}
+                  >
+                    {size}
+                  </Text>
+                </Pressable>
+              )}
+            </ButtonSelection>
+          )}
+        />
+
         <View style={{ marginTop: 'auto' }}>
           <Button
-            onPress={onSubmit}
+            onPress={handleSubmit(onSubmit)}
             text={
               isUpdating && loading
                 ? 'Atualizando..'
