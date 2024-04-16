@@ -5,7 +5,7 @@ import ProductCard from '@components/ProductCard'
 import { ActivityIndicator, SectionList, Text } from 'react-native'
 
 export default function ProductsList() {
-  const { data, error, isLoading } = useProductList()
+  const { data, error, isLoading, refetch, isRefetching } = useProductList()
 
   if (isLoading) {
     return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
@@ -41,6 +41,8 @@ export default function ProductsList() {
           {title}
         </Text>
       )}
+      onRefresh={refetch}
+      refreshing={isRefetching}
     />
   )
 }

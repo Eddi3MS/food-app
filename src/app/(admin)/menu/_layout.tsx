@@ -1,10 +1,13 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Colors from '@/constants/Colors'
+import { useCategoriesList } from '@/queries/categories'
 import { Link, Stack } from 'expo-router'
 import React from 'react'
 import { Pressable } from 'react-native'
 
 export default function MenuLayout() {
+  useCategoriesList()
+
   return (
     <Stack>
       <Stack.Screen

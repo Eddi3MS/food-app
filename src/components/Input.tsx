@@ -46,9 +46,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     color: Colors.red,
   },
-  error_color: {
-    color: Colors.red,
-  },
+
   error_border: {
     borderColor: Colors.red,
   },

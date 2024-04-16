@@ -16,7 +16,7 @@ import {
 
 const ProductDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { data: product, error, isLoading } = useProduct(+id)
+  const { data: product, error, isLoading } = useProduct(id)
 
   if (isLoading) {
     return (
@@ -76,6 +76,7 @@ const ProductDetails = () => {
       />
 
       <Text style={styles.title}>{product.name}</Text>
+      <Text style={styles.category}>{product.categories?.name}</Text>
       <Text style={styles.text}>{product.description}</Text>
       <Text style={styles.price}>{formatCurrency(product.price)}</Text>
     </ScrollView>
@@ -104,6 +105,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: Colors.black,
     textAlign: 'center',
+  },
+  category: {
+    backgroundColor: Colors.primary,
+    color: Colors.white,
+    alignSelf: 'center',
+    padding: 5,
+    borderRadius: 5,
   },
   text: { fontSize: 18, textAlign: 'center', marginVertical: 10 },
   price: {

@@ -39,6 +39,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="categories"
+        options={{
+          title: 'Categorias',
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon name="file" color={color} size={20} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="orders"
         options={{
           title: 'Pedidos',

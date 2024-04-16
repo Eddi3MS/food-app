@@ -47,6 +47,27 @@ export type Database = {
           },
         ]
       }
+      categories: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+          order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+          order?: number
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -120,6 +141,7 @@ export type Database = {
       }
       products: {
         Row: {
+          category_id: number
           created_at: string
           description: string
           id: number
@@ -129,6 +151,7 @@ export type Database = {
           size: Database["public"]["Enums"]["sizes"]
         }
         Insert: {
+          category_id: number
           created_at?: string
           description?: string
           id?: number
@@ -138,6 +161,7 @@ export type Database = {
           size?: Database["public"]["Enums"]["sizes"]
         }
         Update: {
+          category_id?: number
           created_at?: string
           description?: string
           id?: number
@@ -146,7 +170,15 @@ export type Database = {
           price?: number
           size?: Database["public"]["Enums"]["sizes"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

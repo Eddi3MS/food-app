@@ -18,7 +18,7 @@ const ProductDetails = () => {
   const { addItem } = useCart()
 
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { data: product, error, isLoading } = useProduct(+id)
+  const { data: product, error, isLoading } = useProduct(id)
 
   if (isLoading) {
     return (
@@ -44,7 +44,7 @@ const ProductDetails = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Stack.Screen options={{ title: product.name }} />
+      <Stack.Screen options={{ title: product.name, headerShown: true }} />
 
       <Image
         source={{
@@ -53,6 +53,7 @@ const ProductDetails = () => {
         style={styles.image}
         resizeMode="contain"
       />
+      <Text style={styles.category}>{product.categories?.name}</Text>
       <Text style={styles.text}>{product.description}</Text>
       <Text style={styles.price}>{formatCurrency(product.price)}</Text>
 
@@ -77,6 +78,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   text: { fontSize: 18, textAlign: 'center', marginVertical: 10 },
+  category: {
+    backgroundColor: Colors.primary,
+    color: Colors.white,
+    alignSelf: 'center',
+    padding: 5,
+    borderRadius: 5,
+  },
   price: {
     color: Colors.black,
     fontSize: 24,

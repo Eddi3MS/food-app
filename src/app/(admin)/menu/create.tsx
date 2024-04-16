@@ -1,7 +1,9 @@
-import ButtonSelection from '@/components/ButtonSelection'
+import CenteredFeedback from '@/components/CenteredFeedback'
 import Input from '@/components/Input'
+import Select from '@/components/Select'
 import Colors from '@/constants/Colors'
 import { supabase } from '@/lib/supabase'
+import { useCategoriesList } from '@/queries/categories'
 import {
   useDeleteProduct,
   useInsertProduct,
@@ -9,7 +11,6 @@ import {
   useUpdateProduct,
 } from '@/queries/products'
 import { ProductFormType, ProductSchema } from '@/schemas'
-import { Enums } from '@/types'
 import { formatCurrency } from '@/utils/formatCurrency'
 import Button from '@components/Button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,10 +18,11 @@ import { decode } from 'base64-arraybuffer'
 import { randomUUID } from 'expo-crypto'
 import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
+import { Redirect, Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
+  ActivityIndicator,
   Alert,
   Image,
   Pressable,
@@ -29,8 +31,6 @@ import {
   Text,
   View,
 } from 'react-native'
-
-const sizes: Enums<'sizes'>[] = ['P', 'M', 'G', 'GG']
 
 const CreateScreen = () => {
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -42,12 +42,11 @@ const CreateScreen = () => {
     handleSubmit,
     setValue,
     watch,
-  } = useForm({
+  } = useForm<ProductFormType>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       name: '',
       description: '',
-      size: sizes[0],
       price: '',
       image: '',
     },
@@ -58,7 +57,12 @@ const CreateScreen = () => {
   const { id } = useLocalSearchParams<{ id?: string }>()
 
   const isUpdating = !!id
-  const { data: updatingProduct } = useProduct(id ? +id : 0)
+  const {
+    data: updatingProduct,
+    isLoading: isLoadingProduct,
+    error: productError,
+  } = useProduct(id)
+  const { data: categoriesList, isLoading, error } = useCategoriesList()
 
   useEffect(() => {
     if (!updatingProduct) return
@@ -66,7 +70,7 @@ const CreateScreen = () => {
     setValue('name', updatingProduct.name)
     setValue('price', String(updatingProduct.price))
     setValue('image', updatingProduct.image ? updatingProduct.image : '')
-    setValue('size', updatingProduct.size)
+    setValue('category_id', updatingProduct.category_id)
     setValue('description', updatingProduct.description)
   }, [])
 
@@ -103,14 +107,14 @@ const CreateScreen = () => {
 
   const onSubmit = async (data: ProductFormType) => {
     setLoading(true)
-    const { image, name, description, size, price } = data
+    const { image, name, description, category_id, price } = data
 
     const parsedPriceInCents = parseFloat(price.replace(',', ''))
 
     const productData = {
       name,
       price: parsedPriceInCents,
-      size,
+      category_id,
       description,
     }
 
@@ -191,9 +195,31 @@ const CreateScreen = () => {
     }
   }
 
+  if (isLoading || isLoadingProduct) {
+    return (
+      <>
+        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
+        <Stack.Screen options={{ title: 'Carregando..' }} />
+      </>
+    )
+  }
+
+  if (error || productError) {
+    return (
+      <>
+        <CenteredFeedback text="Erro ao carregar dados." />
+        <Stack.Screen options={{ title: 'Oops..' }} />
+      </>
+    )
+  }
+
+  if (!categoriesList) {
+    return <Redirect href="/(admin)/menu/categories" />
+  }
+
   return (
-    <View style={styles.container}>
-      <ScrollView>
+    <ScrollView>
+      <View style={styles.container}>
         <Stack.Screen
           options={{
             title: isUpdating ? 'Atualizar produto' : 'Adicionar produto',
@@ -261,45 +287,18 @@ const CreateScreen = () => {
 
         <Controller
           control={control}
-          name="size"
+          name="category_id"
           render={({ field: { onChange, value } }) => (
-            <ButtonSelection
-              options={sizes}
-              keyExtractor={(size) => size}
-              title={<Text style={styles.label}>Tamanho:</Text>}
-              optionsContainerClasses={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                marginVertical: 10,
-              }}
-            >
-              {(size) => (
-                <Pressable
-                  onPress={() => {
-                    onChange(size)
-                  }}
-                  style={[
-                    styles.size,
-                    {
-                      backgroundColor:
-                        value === size ? Colors.gray : '#00000005',
-                    },
-                  ]}
-                  key={size}
-                >
-                  <Text
-                    style={[
-                      styles.sizeText,
-                      {
-                        color: value === size ? Colors.black : Colors.gray,
-                      },
-                    ]}
-                  >
-                    {size}
-                  </Text>
-                </Pressable>
-              )}
-            </ButtonSelection>
+            <Select
+              categoriesList={categoriesList.map((cat) => ({
+                label: cat.name,
+                value: cat.id,
+                key: cat.id,
+              }))}
+              onChange={(value) => onChange(value)}
+              value={value}
+              error={errors.category_id?.message}
+            />
           )}
         />
 
@@ -326,8 +325,8 @@ const CreateScreen = () => {
             </Text>
           </Pressable>
         )}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 const styles = StyleSheet.create({
@@ -357,37 +356,6 @@ const styles = StyleSheet.create({
   },
   label: {
     color: Colors.black,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Colors.gray,
-    color: Colors.black,
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 20,
-    backgroundColor: Colors.white,
-    borderRadius: 5,
-  },
-  error: {
-    color: Colors.red,
-    textAlign: 'center',
-  },
-  sizeTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 10,
-    color: Colors.black,
-  },
-  size: {
-    width: 50,
-    aspectRatio: 1,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sizeText: {
-    fontSize: 20,
-    fontWeight: '500',
   },
 })
 

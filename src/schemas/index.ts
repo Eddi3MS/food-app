@@ -29,7 +29,10 @@ export const ProductSchema = z.object({
   description: z.string().min(1, 'Campo Obrigatório'),
   price: z.string().min(1, 'Campo Obrigatório'),
   image: z.string().optional(),
-  size: z.enum(['P', 'M', 'G', 'GG']),
+  category_id: z.number({
+    required_error: 'Campo Obrigatório',
+    invalid_type_error: 'Selecione uma categoria.',
+  }),
 })
 
 export type ProductFormType = z.infer<typeof ProductSchema>

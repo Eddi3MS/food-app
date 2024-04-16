@@ -1,46 +1,40 @@
 import { supabase } from '@/lib/supabase'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Tables, InsertTables, UpdateTables } from '@/types'
-import { sizeName } from '@/utils/dictionary'
+import { InsertTables, UpdateTables } from '@/types'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useProductList = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('products').select('*')
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*, products(*)')
+        .order('order', { ascending: true })
 
       if (error) {
         throw new Error(error.message)
       }
 
-      const formattedData = data.reduce(
-        (acc: { title: string; data: Tables<'products'>[] }[], att) => {
-          const title = `Pizza ${sizeName(att.size)}`
-          const existingObject = acc.find((item) => item.title === title)
+      if (!data) {
+        return []
+      }
 
-          if (existingObject) {
-            existingObject.data.push(att)
-          } else {
-            acc.push({ title, data: [att] })
-          }
-
-          return acc
-        },
-        []
-      )
-
-      return formattedData
+      return data
+        .map((group) => ({ title: group.name, data: group.products }))
+        .filter((group) => group.data.length > 0)
     },
   })
 }
 
-export const useProduct = (id: number) => {
+export const useProduct = (id?: string) => {
   return useQuery({
     queryKey: ['products', id],
     queryFn: async () => {
+      if (!id) return null
+
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('*, categories(*)')
         .eq('id', id)
         .single()
 

@@ -6,6 +6,7 @@ import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,26 +47,27 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <QueryProvider>
-      <AuthProvider>
-        <CartProvider>
-          <Stack>
-            <Stack.Screen name="(user)" options={{ headerShown: false }} />
-            <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="cart"
-              options={{
-                title: 'Carrinho',
-                presentation: 'modal',
-                animation: 'slide_from_bottom',
-              }}
-            />
-          </Stack>
-        </CartProvider>
-      </AuthProvider>
-    </QueryProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Stack>
+              <Stack.Screen name="(user)" options={{ headerShown: false }} />
+              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="cart"
+                options={{
+                  title: 'Carrinho',
+                  presentation: 'modal',
+                  animation: 'slide_from_bottom',
+                }}
+              />
+            </Stack>
+          </CartProvider>
+        </AuthProvider>
+      </QueryProvider>
+    </GestureHandlerRootView>
   )
 }
-
