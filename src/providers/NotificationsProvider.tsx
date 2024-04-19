@@ -1,14 +1,34 @@
 import { registerForPushNotificationsAsync } from '@/lib/notifications'
+import { supabase } from '@/lib/supabase'
 import * as Notifications from 'expo-notifications'
 import { PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { useAuth } from './AuthProvider'
+
+type PushTokenType = string | undefined
 
 const NotificationProvider = ({ children }: PropsWithChildren) => {
-  const [expoPushToken, setExpoPushToken] = useState<String | undefined>()
-  console.log('🚀 ~ NotificationProvider ~ expoPushToken:', expoPushToken)
+  const { profile } = useAuth()
+
+  const [expoPushToken, setExpoPushToken] = useState<PushTokenType>()
+
   const [notification, setNotification] = useState<Notifications.Notification>()
-  console.log('🚀 ~ NotificationProvider ~ notification:', notification)
+
   const notificationListener = useRef<Notifications.Subscription>()
   const responseListener = useRef<Notifications.Subscription>()
+
+  useEffect(() => {
+    if (!profile || !expoPushToken || profile.expo_push_token === expoPushToken)
+      return
+
+    const updateProfile = async () => {
+      await supabase
+        .from('profiles')
+        .update({ expo_push_token: expoPushToken })
+        .eq('id', profile.id)
+    }
+
+    updateProfile()
+  }, [expoPushToken, profile?.id])
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {

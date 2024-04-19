@@ -49,9 +49,9 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryProvider>
-        <NotificationProvider>
-          <AuthProvider>
+      <AuthProvider>
+        <QueryProvider>
+          <NotificationProvider>
             <CartProvider>
               <Stack>
                 <Stack.Screen name="(user)" options={{ headerShown: false }} />
@@ -68,9 +68,9 @@ function RootLayoutNav() {
                 />
               </Stack>
             </CartProvider>
-          </AuthProvider>
-        </NotificationProvider>
-      </QueryProvider>
+          </NotificationProvider>
+        </QueryProvider>
+      </AuthProvider>
     </GestureHandlerRootView>
   )
 }

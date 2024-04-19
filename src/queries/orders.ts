@@ -70,7 +70,9 @@ export const useAdminOrderDetails = (id: number, isAdmin = false) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('orders')
-        .select('*, order_items(*, products(*)), profiles(address(*))')
+        .select(
+          '*, order_items(*, products(*)), profiles(expo_push_token,address(*))'
+        )
         .eq('id', id)
         .single()
 

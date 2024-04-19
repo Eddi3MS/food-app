@@ -3,6 +3,7 @@ import CenteredFeedback from '@/components/CenteredFeedback'
 import OrderListCard from '@/components/OrderListCard'
 import OrderProductCard from '@/components/OrderProductCard'
 import Colors from '@/constants/Colors'
+import { sendPushNotification } from '@/lib/notifications'
 import { useAdminOrderDetails, useUpdateOrder } from '@/queries/orders'
 import { Enums, OrderStatusList } from '@/types'
 import { Stack, useLocalSearchParams } from 'expo-router'
@@ -60,6 +61,14 @@ export default function OrderDetailsScreen() {
         onSettled: () => setLoading(false),
       }
     )
+
+    if (data.profiles?.expo_push_token) {
+      sendPushNotification({
+        expoPushToken: data.profiles.expo_push_token,
+        title: `Pedido ${data.id}`,
+        body: `Status atualizado: ${status}`,
+      })
+    }
   }
 
   const address = data.profiles?.address?.[0]

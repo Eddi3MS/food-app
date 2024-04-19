@@ -17,7 +17,7 @@ export async function sendPushNotification({
   expoPushToken,
   ...rest
 }: {
-  expoPushToken: Notifications.ExpoPushToken
+  expoPushToken: string
   title: string
   body: string
   data?: Record<string, unknown>
@@ -28,15 +28,19 @@ export async function sendPushNotification({
     ...rest,
   }
 
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  })
+  try {
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export async function registerForPushNotificationsAsync() {
@@ -47,7 +51,7 @@ export async function registerForPushNotificationsAsync() {
       name: 'default',
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: Colors.primary,
+      lightColor: Colors.red,
     })
   }
 
@@ -59,7 +63,7 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!')
+      alert('Falha ao requerer acesso a push notification!')
       return
     }
     token = (
@@ -67,9 +71,8 @@ export async function registerForPushNotificationsAsync() {
         projectId: Constants.expoConfig?.extra?.eas.projectId,
       })
     ).data
-    console.log(token)
   } else {
-    alert('Must use physical device for Push Notifications')
+    alert('Push Notifications não suportado em emuladores.')
   }
 
   return token
