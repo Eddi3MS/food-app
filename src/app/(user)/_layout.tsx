@@ -29,6 +29,7 @@ export default function TabLayout() {
             <FontAwesomeIcon name="cutlery" color={color} size={20} />
           ),
           headerShown: false,
+          title: 'Menu',
         }}
       />
 
@@ -39,6 +40,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon name="list" color={color} />
           ),
+          title: 'Pedidos',
         }}
       />
 
