@@ -1,5 +1,6 @@
 import AuthProvider from '@/providers/AuthProvider'
 import CartProvider from '@/providers/CartProvider'
+import NotificationProvider from '@/providers/NotificationsProvider'
 import QueryProvider from '@/providers/QueryProvider'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
@@ -49,24 +50,26 @@ function RootLayoutNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryProvider>
-        <AuthProvider>
-          <CartProvider>
-            <Stack>
-              <Stack.Screen name="(user)" options={{ headerShown: false }} />
-              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="cart"
-                options={{
-                  title: 'Carrinho',
-                  presentation: 'modal',
-                  animation: 'slide_from_bottom',
-                }}
-              />
-            </Stack>
-          </CartProvider>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Stack>
+                <Stack.Screen name="(user)" options={{ headerShown: false }} />
+                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="cart"
+                  options={{
+                    title: 'Carrinho',
+                    presentation: 'modal',
+                    animation: 'slide_from_bottom',
+                  }}
+                />
+              </Stack>
+            </CartProvider>
+          </AuthProvider>
+        </NotificationProvider>
       </QueryProvider>
     </GestureHandlerRootView>
   )
