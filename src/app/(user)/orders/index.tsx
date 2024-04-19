@@ -18,7 +18,7 @@ export default function OrdersScreen() {
     return <CenteredFeedback text="Algo deu errado na listagem." />
   }
 
-  if (!data) {
+  if (!Array.isArray(data) || data.length === 0) {
     return <CenteredFeedback text="Nenhum pedido encontrado." />
   }
 

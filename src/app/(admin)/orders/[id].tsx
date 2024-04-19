@@ -59,16 +59,17 @@ export default function OrderDetailsScreen() {
       },
       {
         onSettled: () => setLoading(false),
+        onSuccess: () => {
+          if (data.profiles?.expo_push_token) {
+            sendPushNotification({
+              expoPushToken: data.profiles.expo_push_token,
+              title: `Pedido ${data.id}`,
+              body: `Status atualizado: ${status}`,
+            })
+          }
+        },
       }
     )
-
-    if (data.profiles?.expo_push_token) {
-      sendPushNotification({
-        expoPushToken: data.profiles.expo_push_token,
-        title: `Pedido ${data.id}`,
-        body: `Status atualizado: ${status}`,
-      })
-    }
   }
 
   const address = data.profiles?.address?.[0]

@@ -72,7 +72,7 @@ export async function registerForPushNotificationsAsync() {
       })
     ).data
   } else {
-    alert('Push Notifications não suportado em emuladores.')
+    // alert('Push Notifications não suportado em emuladores.')
   }
 
   return token
