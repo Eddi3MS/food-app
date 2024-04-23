@@ -142,17 +142,19 @@ const Address = () => {
           )}
         />
 
-        <Button
-          text={isSubmitting ? 'Salvando' : 'Salvar'}
-          onPress={handleSubmit(handleSaveAddress)}
-          disabled={isSubmitting}
-        />
-
-        <Button
-          text={'Cancelar'}
-          onPress={handleBack}
-          disabled={isSubmitting}
-        />
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Button
+            text={'Cancelar'}
+            onPress={handleBack}
+            variant="danger"
+            disabled={isSubmitting}
+          />
+          <Button
+            disabled={isSubmitting}
+            text={isSubmitting ? 'Salvando' : 'Salvar'}
+            onPress={handleSubmit(handleSaveAddress)}
+          />
+        </View>
       </ScrollView>
     </View>
   )

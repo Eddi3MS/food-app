@@ -51,7 +51,7 @@ export const useUserOrderDetails = (id: number) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('orders')
-        .select('*, order_items(*, products(*))')
+        .select('*, order_items(*, products(*, categories(*)))')
         .eq('id', id)
         .single()
 
@@ -71,7 +71,7 @@ export const useAdminOrderDetails = (id: number, isAdmin = false) => {
       const { data, error } = await supabase
         .from('orders')
         .select(
-          '*, order_items(*, products(*)), profiles(expo_push_token,address(*))'
+          '*, order_items(*, products(*, categories(*))), profiles(expo_push_token,address(*))'
         )
         .eq('id', id)
         .single()

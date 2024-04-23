@@ -288,10 +288,8 @@ const CreateScreen = () => {
             />
           )}
         />
-
-        <View style={{ marginTop: 'auto' }}>
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Button
-            onPress={handleSubmit(onSubmit)}
             text={
               isUpdating && loading
                 ? 'Atualizando..'
@@ -301,6 +299,7 @@ const CreateScreen = () => {
                 ? 'Adicionando..'
                 : 'Adicionar'
             }
+            onPress={handleSubmit(onSubmit)}
             disabled={loading}
           />
         </View>

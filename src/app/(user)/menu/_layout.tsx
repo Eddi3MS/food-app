@@ -27,7 +27,7 @@ export default function MenuLayout() {
                   <FontAwesomeIcon
                     name="shopping-cart"
                     size={20}
-                    color={totalItems ? Colors.primary : Colors.white}
+                    color={Colors.white}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 </View>

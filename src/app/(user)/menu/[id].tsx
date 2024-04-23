@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { useProduct } from '@/queries/products'
 import { formatCurrency } from '@/utils/formatCurrency'
-import { Stack, useLocalSearchParams } from 'expo-router'
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -12,9 +12,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  View,
 } from 'react-native'
 
 const ProductDetails = () => {
+  const router = useRouter()
   const { addItem } = useCart()
 
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -32,6 +34,10 @@ const ProductDetails = () => {
     addItem(product)
   }
 
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image
@@ -46,7 +52,10 @@ const ProductDetails = () => {
       <Text style={styles.text}>{product.description}</Text>
       <Text style={styles.price}>{formatCurrency(product.price)}</Text>
 
-      <Button text="Adicionar ao carrinho" onPress={handleAddItemToCart} />
+      <View style={{ flexDirection: 'row', gap: 10 }}>
+        <Button text="Voltar" onPress={handleBack} variant="danger" />
+        <Button text="Adicionar" onPress={handleAddItemToCart} />
+      </View>
     </ScrollView>
   )
 }

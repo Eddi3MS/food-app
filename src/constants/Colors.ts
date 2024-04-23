@@ -4,5 +4,5 @@ export default {
   primary: '#2f95dc',
   primaryDark: '#1983cf',
   gray: '#ccc',
-  red: '#ff000090',
+  red: '#fb3310',
 }

@@ -6,53 +6,45 @@ import { Tables } from '../types'
 import { formatCurrency } from '@/utils/formatCurrency'
 
 type OrderProductCardProps = {
-  item: Tables<'order_items'> & { products: Tables<'products'> }
+  item: Tables<'order_items'> & {
+    products:
+      | (Tables<'products'> & { categories: Tables<'categories'> | null })
+      | null
+  }
 }
 
 const OrderProductCard = ({ item }: OrderProductCardProps) => {
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 10,
-          }}
-        >
-          <Text style={styles.title}>
-            {item.quantity}x - {item.products.name}
-          </Text>
-          <Text style={styles.title}>{sizeName(item.products.size)}</Text>
-        </View>
-
-        <View style={styles.subtitleContainer}>
-          <Text>
-            <Text style={styles.price}>
-              {formatCurrency(item.products.price)}
-            </Text>{' '}
-            unid.
-          </Text>
-        </View>
-        {item.quantity > 1 && (
-          <View style={styles.subtitleContainer}>
-            <Text>
-              <Text style={styles.price}>
-                {formatCurrency(item.quantity * item.products.price)}
-              </Text>{' '}
-              total.
-            </Text>
-          </View>
-        )}
-      </View>
-
       <Image
         source={{
-          uri: item.products.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
+          uri: item?.products?.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
         }}
         style={styles.image}
         resizeMode="contain"
       />
+      <Text style={styles.badge}>{item?.products?.categories?.name}</Text>
+      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+        <Text style={styles.title}>
+          {item.quantity}x - {item?.products?.name}
+        </Text>
+
+        <Text>
+          <Text style={styles.price}>
+            {formatCurrency(item?.products?.price)}
+          </Text>{' '}
+          unid.
+        </Text>
+
+        {item.quantity > 1 && (
+          <Text>
+            <Text style={styles.price}>
+              {formatCurrency(item.quantity * item?.products?.price!)}
+            </Text>{' '}
+            total.
+          </Text>
+        )}
+      </View>
     </View>
   )
 }
@@ -64,8 +56,8 @@ const styles = StyleSheet.create({
     padding: 5,
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
     gap: 10,
+    position: 'relative',
   },
   image: {
     width: 75,
@@ -79,6 +71,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: Colors.black,
+  },
+  badge: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    backgroundColor: Colors.primary,
+    padding: 5,
+    color: Colors.white,
+    borderTopRightRadius: 10,
   },
   subtitleContainer: {
     gap: 5,

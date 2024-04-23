@@ -27,7 +27,7 @@ const CreateCategoryModal = ({
   const { mutate: updateCategory } = useUpdateCategory()
 
   const handleSubmit = () => {
-    if (!category) return
+    if (!category || category.length < 4) return
 
     setLoadingCategory(true)
     if (selectedId) {
@@ -84,33 +84,27 @@ const CreateCategoryModal = ({
             gap: 15,
           }}
         >
-          <Text
-            onPress={handleClose}
-            style={{
-              verticalAlign: 'middle',
-              borderWidth: 1,
-              borderColor: Colors.gray,
-              color: Colors.gray,
-              paddingHorizontal: 10,
-              paddingVertical: 6,
-              borderRadius: 5,
-            }}
-          >
-            Cancelar
-          </Text>
-          <Button
-            text={
-              selectedId && loadingCategory
-                ? 'Atualizando'
-                : selectedId
-                ? 'Atualizar'
-                : loadingCategory
-                ? 'Adicionando..'
-                : 'Adicionar'
-            }
-            onPress={handleSubmit}
-            disabled={!category || loadingCategory}
-          />
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
+            <Button
+              variant="danger"
+              text="Cancelar"
+              onPress={handleClose}
+              disabled={loadingCategory}
+            />
+            <Button
+              text={
+                selectedId && loadingCategory
+                  ? 'Atualizando'
+                  : selectedId
+                  ? 'Atualizar'
+                  : loadingCategory
+                  ? 'Adicionando..'
+                  : 'Adicionar'
+              }
+              onPress={handleSubmit}
+              disabled={loadingCategory}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -126,12 +120,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#00000050',
+    backgroundColor: '#00000080',
     alignItems: 'center',
     justifyContent: 'center',
   },
   createContainer: {
-    minWidth: '90%',
+    width: '90%',
+    maxWidth: 400,
     paddingVertical: 20,
     paddingHorizontal: 10,
     borderRadius: 5,

@@ -11,6 +11,7 @@ export default function MenuStack() {
       }}
     >
       <Stack.Screen name="index" options={{ title: '' }} />
+      <Stack.Screen name="[id]" options={{ title: '' }} />
     </Stack>
   )
 }

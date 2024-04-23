@@ -29,7 +29,9 @@ const Profile = () => {
           </Text>
           <Text style={styles.text}>Deseja fazer isso agora?</Text>
 
-          <Button text="Ir para cadastro" onPress={handleNavigateToAddress} />
+          <View style={{ flexDirection: 'row', marginTop: 10 }}>
+            <Button text="Ir para cadastro" onPress={handleNavigateToAddress} />
+          </View>
         </View>
       </View>
     )

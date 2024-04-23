@@ -18,8 +18,9 @@ const EmptyCartCard = () => {
           style={styles.image}
         />
         <Text style={styles.text}>Seu carrinho está vazio..</Text>
-        <View style={styles.buttonContainer}>
-          <Button onPress={handleBack} text="Voltar" />
+
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+          <Button text="Voltar" onPress={handleBack} variant="danger" />
         </View>
       </View>
     </View>
@@ -43,8 +44,5 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     marginVertical: 10,
-  },
-  buttonContainer: {
-    width: '100%',
   },
 })

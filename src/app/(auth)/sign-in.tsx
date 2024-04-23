@@ -63,11 +63,14 @@ const SignInScreen = () => {
         )}
       />
 
-      <Button
-        text={isSubmitting ? 'Entrando..' : 'Entrar'}
-        onPress={handleSubmit(handleSignIn)}
-        disabled={isSubmitting}
-      />
+      <View style={{ flexDirection: 'row', marginTop: 10 }}>
+        <Button
+          text={isSubmitting ? 'Entrando..' : 'Entrar'}
+          onPress={handleSubmit(handleSignIn)}
+          disabled={isSubmitting}
+        />
+      </View>
+
       <Link href="/sign-up" style={styles.textButton}>
         Criar Conta
       </Link>
