@@ -1,4 +1,5 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
+import HeaderLogo from '@/components/HeaderLogo'
 import Colors from '@/constants/Colors'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
@@ -45,6 +46,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon name="file" color={color} size={20} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -64,22 +66,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon name="user" color={color} />
           ),
-          headerRight: () => (
-            <Pressable
-              onPress={() => {
-                supabase.auth.signOut()
-              }}
-            >
-              {({ pressed }) => (
-                <FontAwesomeIcon
-                  name="sign-out"
-                  size={20}
-                  color={Colors.gray}
-                  style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                />
-              )}
-            </Pressable>
-          ),
+          headerShown: false,
         }}
       />
     </Tabs>

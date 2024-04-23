@@ -8,11 +8,11 @@ import { useAdminOrderDetails, useUpdateOrder } from '@/queries/orders'
 import { Enums, OrderStatusList } from '@/types'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
-import { StyleSheet } from 'react-native'
 import {
   ActivityIndicator,
   FlatList,
   Pressable,
+  StyleSheet,
   Text,
   View,
 } from 'react-native'
@@ -24,30 +24,15 @@ export default function OrderDetailsScreen() {
   const { mutate: handleUpdateOrder } = useUpdateOrder()
 
   if (isLoading) {
-    return (
-      <>
-        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
-        <Stack.Screen options={{ title: 'Carregando..' }} />
-      </>
-    )
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
   }
 
   if (error) {
-    return (
-      <>
-        <CenteredFeedback text="Erro ao listar produto." />
-        <Stack.Screen options={{ title: 'Oops..' }} />
-      </>
-    )
+    return <CenteredFeedback text="Erro ao listar produto." />
   }
 
   if (!data) {
-    return (
-      <>
-        <CenteredFeedback text="Produto não encontrado." />
-        <Stack.Screen options={{ title: 'Oops..' }} />
-      </>
-    )
+    return <CenteredFeedback text="Produto não encontrado." />
   }
 
   const handleUpdateStatus = async (status: Enums<'statuses'>) => {
@@ -78,7 +63,7 @@ export default function OrderDetailsScreen() {
 
   return (
     <View style={{ padding: 10, gap: 20, flex: 1 }}>
-      <Stack.Screen options={{ title: `Pedido #${id}` }} />
+      <Stack.Screen options={{ title: '' }} />
 
       <FlatList
         data={data.order_items}

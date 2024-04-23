@@ -1,3 +1,4 @@
+import HeaderLogo from '@/components/HeaderLogo'
 import Input from '@/components/Input'
 import Colors from '@/constants/Colors'
 import { supabase } from '@/lib/supabase'
@@ -32,6 +33,7 @@ const SignInScreen = () => {
 
   return (
     <View style={styles.container}>
+      <HeaderLogo mode="black" size="lg" />
       <Controller
         control={control}
         name="email"

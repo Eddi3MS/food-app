@@ -8,26 +8,21 @@ const Tabs = withLayoutContext(createMaterialTopTabNavigator().Navigator)
 
 const ListLayout = () => {
   return (
-    <SafeAreaView
-      edges={['top']}
-      style={{ flex: 1, backgroundColor: Colors.white }}
-    >
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: Colors.primary,
-          tabBarInactiveTintColor: Colors.gray,
-          tabBarAndroidRipple: { color: Colors.gray, borderless: true },
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.gray,
+        tabBarAndroidRipple: { color: Colors.gray, borderless: true },
 
-          tabBarIndicatorStyle: {
-            backgroundColor: Colors.primary,
-          },
-        }}
-      >
-        <Tabs.Screen name="index" options={{ title: 'Novos' }} />
-        <Tabs.Screen name="received" options={{ title: 'Em Andamento' }} />
-        <Tabs.Screen name="arquive" options={{ title: 'Finalizados' }} />
-      </Tabs>
-    </SafeAreaView>
+        tabBarIndicatorStyle: {
+          backgroundColor: Colors.primary,
+        },
+      }}
+    >
+      <Tabs.Screen name="index" options={{ title: 'Novos' }} />
+      <Tabs.Screen name="received" options={{ title: 'Em Andamento' }} />
+      <Tabs.Screen name="arquive" options={{ title: 'Finalizados' }} />
+    </Tabs>
   )
 }
 

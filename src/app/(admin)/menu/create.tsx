@@ -196,21 +196,11 @@ const CreateScreen = () => {
   }
 
   if (isLoading || isLoadingProduct) {
-    return (
-      <>
-        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
-        <Stack.Screen options={{ title: 'Carregando..' }} />
-      </>
-    )
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
   }
 
   if (error || productError) {
-    return (
-      <>
-        <CenteredFeedback text="Erro ao carregar dados." />
-        <Stack.Screen options={{ title: 'Oops..' }} />
-      </>
-    )
+    return <CenteredFeedback text="Erro ao carregar dados." />
   }
 
   if (!categoriesList) {
@@ -220,12 +210,9 @@ const CreateScreen = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Stack.Screen
-          options={{
-            title: isUpdating ? 'Atualizar produto' : 'Adicionar produto',
-          }}
-        />
-
+        <Text style={styles.title}>
+          {isUpdating ? 'Atualizar produto' : 'Adicionar produto'}
+        </Text>
         <Pressable onPress={pickImage}>
           <Image
             source={{
@@ -321,7 +308,7 @@ const CreateScreen = () => {
         {isUpdating && (
           <Pressable onPress={confirmDelete} disabled={deleteLoading}>
             <Text style={styles.deleteButton}>
-              {deleteLoading ? 'Deletando..' : 'Deletar'}
+              {deleteLoading ? 'Deletando..' : 'Deletar Produto'}
             </Text>
           </Pressable>
         )}
@@ -333,6 +320,12 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     flex: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginVertical: 15,
+    textAlign: 'center',
   },
   image: {
     width: '50%',

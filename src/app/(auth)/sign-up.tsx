@@ -8,6 +8,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
 import Button from '../../components/Button'
 import Colors from '../../constants/Colors'
+import HeaderLogo from '@/components/HeaderLogo'
 
 const SignUpScreen = () => {
   const {
@@ -51,6 +52,8 @@ const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
+      <HeaderLogo mode="black" size="lg" />
+
       <Controller
         control={control}
         name="name"

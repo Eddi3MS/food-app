@@ -1,8 +1,12 @@
 import HeaderLogo from '@/components/HeaderLogo'
 import Colors from '@/constants/Colors'
+import { useCategoriesList } from '@/queries/categories'
 import { Stack } from 'expo-router'
+import React from 'react'
 
-export default function MenuStack() {
+export default function CategoriesLayout() {
+  useCategoriesList()
+
   return (
     <Stack
       screenOptions={{
@@ -10,8 +14,12 @@ export default function MenuStack() {
         headerStyle: { backgroundColor: Colors.primary },
       }}
     >
-      <Stack.Screen name="list" options={{ title: '' }} />
+      <Stack.Screen
+        name="index"
+        options={{
+          title: '',
+        }}
+      />
     </Stack>
   )
 }
-

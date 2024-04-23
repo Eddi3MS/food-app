@@ -1,19 +1,16 @@
-import Button from '@/components/Button'
 import CategoryCard from '@/components/categories/CategoryCard'
 import CreateCategoryModal from '@/components/categories/CreateCategoryModal'
 import CenteredFeedback from '@/components/CenteredFeedback'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import Input from '@/components/Input'
+import HeaderLogo from '@/components/HeaderLogo'
 import Colors from '@/constants/Colors'
 import {
   useCategoriesList,
-  useInsertCategory,
   useUpdateCategoriesOrder,
-  useUpdateCategory,
 } from '@/queries/categories'
 import { Tables } from '@/types'
 import { Stack } from 'expo-router'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -49,21 +46,11 @@ const Categories = () => {
   }
 
   if (isLoading) {
-    return (
-      <>
-        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
-        <Stack.Screen options={{ title: 'Carregando..' }} />
-      </>
-    )
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
   }
 
   if (error) {
-    return (
-      <>
-        <CenteredFeedback text="Erro ao carregar dados." />
-        <Stack.Screen options={{ title: 'Oops..' }} />
-      </>
-    )
+    return <CenteredFeedback text="Erro ao carregar dados." />
   }
 
   if (!categoriesList) {
@@ -80,7 +67,7 @@ const Categories = () => {
                 <FontAwesomeIcon
                   name="plus-square-o"
                   size={20}
-                  color={Colors.primary}
+                  color={Colors.white}
                   style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                 />
               )}

@@ -19,37 +19,21 @@ const ProductDetails = () => {
   const { data: product, error, isLoading } = useProduct(id)
 
   if (isLoading) {
-    return (
-      <>
-        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
-        <Stack.Screen options={{ title: 'Carregando..' }} />
-      </>
-    )
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
   }
 
   if (error) {
-    return (
-      <>
-        <CenteredFeedback text="Erro ao listar produto." />
-        <Stack.Screen options={{ title: 'Oops..' }} />
-      </>
-    )
+    return <CenteredFeedback text="Erro ao listar produto." />
   }
 
   if (!product) {
-    return (
-      <>
-        <Stack.Screen options={{ title: 'Oops..' }} />
-        <CenteredFeedback text="Produto não encontrado." />
-      </>
-    )
+    return <CenteredFeedback text="Produto não encontrado." />
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Stack.Screen
         options={{
-          title: product.name,
           headerRight: () => (
             <Link href={`/(admin)/menu/create?id=${id}`} asChild>
               <Pressable>
@@ -57,7 +41,7 @@ const ProductDetails = () => {
                   <FontAwesomeIcon
                     name="pencil"
                     size={20}
-                    color={Colors.primary}
+                    color={Colors.white}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
