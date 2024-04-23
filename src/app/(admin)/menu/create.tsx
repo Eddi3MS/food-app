@@ -273,7 +273,7 @@ const CreateScreen = () => {
             <Input
               value={formatCurrency(value)}
               onChangeText={(text) => {
-                const sanitizedText = text.replace(/[^0-9,]/g, '')
+                const sanitizedText = text.replace(/[^0-9]/g, '')
 
                 onChange(sanitizedText)
               }}
@@ -290,7 +290,7 @@ const CreateScreen = () => {
           name="category_id"
           render={({ field: { onChange, value } }) => (
             <Select
-              categoriesList={categoriesList.map((cat) => ({
+              options={categoriesList.map((cat) => ({
                 label: cat.name,
                 value: cat.id,
                 key: cat.id,

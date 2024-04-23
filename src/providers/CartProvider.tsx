@@ -1,15 +1,20 @@
 import { randomUUID } from 'expo-crypto'
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
-import { CartItem, Tables } from '../types'
+import { CartItem, Enums, Tables } from '../types'
 import { useInsertOrder, useInsertOrderItems } from '@/queries/orders'
 import { router } from 'expo-router'
 
 type CartType = {
   items: CartItem[]
-  addItem: (product: Tables<'products'>) => void
+  addItem: (
+    product: Tables<'products'> & { categories: Tables<'categories'> }
+  ) => void
   updateQuantity: (itemId: string, amount: 1 | -1) => void
   total: number
-  checkout: () => void
+  checkout: (data: {
+    paymentType?: Enums<'payment_type'>
+    changeFor?: number | null
+  }) => void
   loading: boolean
 }
 
@@ -38,7 +43,10 @@ export default function CartProvider({ children }: PropsWithChildren) {
     setItems([])
   }
 
-  const addItem = (product: Tables<'products'>) => {
+  const addItem = (
+    product: Tables<'products'> & { categories: Tables<'categories'> }
+  ) => {
+    console.log('🚀 ~ addItem ~ product:', product)
     const existingItem = items.find((item) => item.product.id === product.id)
     if (existingItem) {
       updateQuantity(existingItem.id, 1)
@@ -64,10 +72,16 @@ export default function CartProvider({ children }: PropsWithChildren) {
     )
   }
 
-  const handleCheckout = async () => {
+  const handleCheckout = async ({
+    paymentType = 'Dinheiro',
+    changeFor = null,
+  }: {
+    paymentType?: Enums<'payment_type'>
+    changeFor?: number | null
+  }) => {
     setLoading(true)
     handleInsertOrder(
-      { total },
+      { total, payment_type: paymentType, change_for: changeFor },
       {
         onSuccess: handleSaveOrderItems,
         onError: () => setLoading(false),

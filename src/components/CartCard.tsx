@@ -15,6 +15,7 @@ const CartCard = ({ cartItem }: CartCardProps) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.badge}>{cartItem.product.categories.name}</Text>
       <Image
         source={{
           uri: cartItem.product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
@@ -23,14 +24,12 @@ const CartCard = ({ cartItem }: CartCardProps) => {
         resizeMode="contain"
       />
 
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, gap: 15 }}>
         <Text style={styles.title}>{cartItem.product.name}</Text>
-        <View style={styles.subtitleContainer}>
-          <Text style={styles.price}>
-            {formatCurrency(cartItem.product.price)}
-          </Text>
-          <Text>Tamanho: {cartItem.product.size}</Text>
-        </View>
+
+        <Text style={styles.price}>
+          {formatCurrency(cartItem.product.price)}
+        </Text>
       </View>
       <View style={styles.quantitySelector}>
         <FontAwesomeIcon
@@ -58,10 +57,22 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     borderRadius: 10,
-    padding: 5,
+    padding: 10,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    position: 'relative',
+  },
+  badge: {
+    backgroundColor: Colors.primary,
+    color: Colors.white,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
+    borderBottomLeftRadius: 5,
+    borderTopRightRadius: 10,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   image: {
     width: 75,
@@ -73,17 +84,20 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '500',
     fontSize: 16,
-    marginBottom: 5,
   },
-  subtitleContainer: {
-    flexDirection: 'row',
-    gap: 5,
-  },
+
   quantitySelector: {
     flexDirection: 'row',
     gap: 10,
     alignItems: 'center',
-    marginVertical: 10,
+    marginTop: 'auto',
+    backgroundColor: Colors.gray,
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    padding: 8,
+    borderTopLeftRadius: 5,
+    borderBottomRightRadius: 10,
   },
   quantity: {
     fontWeight: '500',
@@ -98,6 +112,7 @@ const styles = StyleSheet.create({
   price: {
     color: Colors.primary,
     fontWeight: 'bold',
+    marginTop: 'auto',
   },
 })
 

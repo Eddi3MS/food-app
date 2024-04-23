@@ -91,7 +91,7 @@ export const useInsertOrder = () => {
   const userId = session?.user.id
 
   return useMutation({
-    async mutationFn(data: Pick<InsertTables<'orders'>, 'total'>) {
+    async mutationFn(data: Omit<InsertTables<'orders'>, 'user_id'>) {
       const { error, data: newProduct } = await supabase
         .from('orders')
         .insert({ ...data, user_id: userId! })

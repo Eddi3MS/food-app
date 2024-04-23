@@ -5,22 +5,24 @@ import Colors from '@/constants/Colors'
 import { StyleSheet } from 'react-native'
 
 const Select = <T,>({
-  categoriesList,
+  title = 'Categoria',
+  options,
   onChange,
   value,
   error,
 }: {
-  categoriesList: T & Item[]
+  options: T & Item[]
   onChange: (item: T & Item['value']) => void
   value: T & Item['value']
   error?: string
+  title?: string
 }) => {
   return (
     <View>
-      <Text style={styles.label}>Categoria:</Text>
+      <Text style={styles.label}>{title}:</Text>
       <PickerSelect
         onValueChange={(value) => onChange(value)}
-        items={categoriesList}
+        items={options}
         itemKey={value}
         value={value}
         placeholder={{ label: 'Selecione..', value: null }}
