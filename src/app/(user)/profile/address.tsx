@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
 import { AddressFormType, AddressSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { router } from 'expo-router'
+import { router, useRouter } from 'expo-router'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
@@ -37,6 +37,7 @@ const Address = () => {
   const handleSaveAddress = async (data: AddressFormType) => {
     if (!session) return
 
+    const router = useRouter()
     try {
       // is insertion
       if (!Array.isArray(profile?.address) || profile.address.length <= 0) {
@@ -74,6 +75,10 @@ const Address = () => {
         Alert.alert('Error', error.message)
       }
     }
+  }
+
+  const handleBack = () => {
+    router.back()
   }
 
   return (
@@ -140,6 +145,12 @@ const Address = () => {
         <Button
           text={isSubmitting ? 'Salvando' : 'Salvar'}
           onPress={handleSubmit(handleSaveAddress)}
+          disabled={isSubmitting}
+        />
+
+        <Button
+          text={'Cancelar'}
+          onPress={handleBack}
           disabled={isSubmitting}
         />
       </ScrollView>

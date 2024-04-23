@@ -7,7 +7,7 @@ import { router } from 'expo-router'
 type CartType = {
   items: CartItem[]
   addItem: (
-    product: Tables<'products'> & { categories: Tables<'categories'> }
+    product: Tables<'products'> & { categories: Tables<'categories'> | null }
   ) => void
   updateQuantity: (itemId: string, amount: 1 | -1) => void
   total: number
@@ -44,9 +44,8 @@ export default function CartProvider({ children }: PropsWithChildren) {
   }
 
   const addItem = (
-    product: Tables<'products'> & { categories: Tables<'categories'> }
+    product: Tables<'products'> & { categories: Tables<'categories'> | null }
   ) => {
-    console.log('🚀 ~ addItem ~ product:', product)
     const existingItem = items.find((item) => item.product.id === product.id)
     if (existingItem) {
       updateQuantity(existingItem.id, 1)

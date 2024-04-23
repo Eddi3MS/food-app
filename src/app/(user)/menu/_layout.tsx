@@ -1,4 +1,5 @@
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
+import HeaderLogo from '@/components/HeaderLogo'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/providers/CartProvider'
 import { Link, Stack } from 'expo-router'
@@ -26,7 +27,7 @@ export default function MenuLayout() {
                   <FontAwesomeIcon
                     name="shopping-cart"
                     size={20}
-                    color={totalItems ? Colors.primary : Colors.gray}
+                    color={totalItems ? Colors.primary : Colors.white}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 </View>
@@ -34,9 +35,12 @@ export default function MenuLayout() {
             </Pressable>
           </Link>
         ),
+        headerLeft: () => <HeaderLogo />,
+        headerStyle: { backgroundColor: Colors.primary },
       }}
     >
-      <Stack.Screen name="index" options={{ title: 'Menu' }} />
+      <Stack.Screen name="index" options={{ title: '' }} />
+      <Stack.Screen name="[id]" options={{ title: '' }} />
     </Stack>
   )
 }

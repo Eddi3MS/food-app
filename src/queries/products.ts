@@ -41,6 +41,11 @@ export const useProduct = (id?: string) => {
       if (error) {
         throw new Error(error.message)
       }
+
+      if (!data) {
+        throw new Error('Nenhum produto encontrado.')
+      }
+
       return data
     },
   })

@@ -37,10 +37,10 @@ export default function TabLayout() {
         name="orders"
         options={{
           headerShown: false,
+          title: 'Pedidos',
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon name="list" color={color} />
           ),
-          title: 'Pedidos',
         }}
       />
 

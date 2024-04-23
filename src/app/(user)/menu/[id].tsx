@@ -21,21 +21,11 @@ const ProductDetails = () => {
   const { data: product, error, isLoading } = useProduct(id)
 
   if (isLoading) {
-    return (
-      <>
-        <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
-        <Stack.Screen options={{ headerShown: false }} />
-      </>
-    )
+    return <ActivityIndicator style={{ flex: 1 }} color={Colors.primary} />
   }
 
   if (!product || error) {
-    return (
-      <>
-        <CenteredFeedback text="Produto não encontrado." />
-        <Stack.Screen options={{ title: 'Oops..' }} />
-      </>
-    )
+    return <CenteredFeedback text="Produto não encontrado." />
   }
 
   const handleAddItemToCart = () => {
@@ -44,8 +34,6 @@ const ProductDetails = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Stack.Screen options={{ title: product.name, headerShown: true }} />
-
       <Image
         source={{
           uri: product.image || process.env.EXPO_PUBLIC_DEFAULT_IMAGE!,
@@ -53,6 +41,7 @@ const ProductDetails = () => {
         style={styles.image}
         resizeMode="contain"
       />
+      <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.category}>{product.categories?.name}</Text>
       <Text style={styles.text}>{product.description}</Text>
       <Text style={styles.price}>{formatCurrency(product.price)}</Text>
@@ -73,10 +62,11 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: 'center',
-    width: '100%',
+    width: '80%',
     aspectRatio: 1,
     borderRadius: 6,
   },
+  title: { fontSize: 20, textAlign: 'center', marginVertical: 15 },
   text: { fontSize: 18, textAlign: 'center', marginVertical: 10 },
   category: {
     backgroundColor: Colors.primary,
